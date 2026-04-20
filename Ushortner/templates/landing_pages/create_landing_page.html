@@ -2,7 +2,6 @@
 {% block title %}Create Advertisement Page — NeuraSafe{% endblock %}
 {% load static %}
 {% block content %}
-<link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
 
 <div class="ns-app-content" data-testid="create-ad-root">
   <div class="animate-fade-in-up" style="margin-bottom: 28px;">
@@ -24,79 +23,136 @@
       <!-- Section: Content -->
       <div class="ns-card" style="padding: 24px;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
-          <span class="ns-stat-icon" style="width: 34px; height: 34px; border-radius: 10px;">
+          <div class="ns-stat-icon" style="width: 34px; height: 34px; border-radius: 10px;">
             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10"/></svg>
-          </span>
-          <h2 style="font-size: 16px; font-weight: 700; margin: 0;">Content</h2>
+          </div>
+          <h2 style="font-size: 16px; font-weight: 700; margin: 0; color: var(--text-primary);">Content</h2>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px;">
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Welcome Message</label>{{ form.welMessage }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.title.label }}</label>{{ form.title }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.description.label }}</label>{{ form.description }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.profile_image.label }}</label>{{ form.profile_image }}</div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Welcome Message</label>
+            {{ form.welMessage }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.title.label }}</label>
+            {{ form.title }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.description.label }}</label>
+            {{ form.description }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.profile_image.label }}</label>
+            {{ form.profile_image }}
+          </div>
         </div>
       </div>
 
       <!-- Section: Appearance -->
       <div class="ns-card" style="padding: 24px;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
-          <span class="ns-stat-icon" style="width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(236,72,153,0.15)); color: #c4b5fd;">
+          <div class="ns-stat-icon" style="width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(236,72,153,0.15)); color: #c4b5fd;">
             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
-          </span>
-          <h2 style="font-size: 16px; font-weight: 700; margin: 0;">Appearance</h2>
+          </div>
+          <h2 style="font-size: 16px; font-weight: 700; margin: 0; color: var(--text-primary);">Appearance</h2>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.background_color.label }}</label>{{ form.background_color }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.text_color.label }}</label>{{ form.text_color }}</div>
-          <div style="grid-column: 1 / -1;"><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.background_image.label }}</label>{{ form.background_image }}</div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.background_color.label }}</label>
+            {{ form.background_color }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.text_color.label }}</label>
+            {{ form.text_color }}
+          </div>
+          <div style="grid-column: 1 / -1;">
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.background_image.label }}</label>
+            {{ form.background_image }}
+          </div>
         </div>
       </div>
 
       <!-- Section: Social -->
       <div class="ns-card" style="padding: 24px;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
-          <span class="ns-stat-icon" style="width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, rgba(6,182,212,0.25), rgba(79,70,229,0.15));">
+          <div class="ns-stat-icon" style="width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, rgba(6,182,212,0.25), rgba(79,70,229,0.15));">
             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684l6.632 3.316m-6.632-6l6.632-3.316"/></svg>
-          </span>
-          <h2 style="font-size: 16px; font-weight: 700; margin: 0;">Social Links</h2>
+          </div>
+          <h2 style="font-size: 16px; font-weight: 700; margin: 0; color: var(--text-primary);">Social Links</h2>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Facebook</label>{{ form.facebook_url }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Twitter</label>{{ form.twitter_url }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Instagram</label>{{ form.instagram_url }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">LinkedIn</label>{{ form.linkedin_url }}</div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Facebook</label>
+            {{ form.facebook_url }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Twitter</label>
+            {{ form.twitter_url }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Instagram</label>
+            {{ form.instagram_url }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">LinkedIn</label>
+            {{ form.linkedin_url }}
+          </div>
         </div>
       </div>
 
       <!-- Section: Media -->
       <div class="ns-card" style="padding: 24px;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
-          <span class="ns-stat-icon" style="width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(236,72,153,0.15)); color: var(--orange);">
+          <div class="ns-stat-icon" style="width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(236,72,153,0.15)); color: var(--orange);">
             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          </span>
-          <h2 style="font-size: 16px; font-weight: 700; margin: 0;">Gallery & Video</h2>
+          </div>
+          <h2 style="font-size: 16px; font-weight: 700; margin: 0; color: var(--text-primary);">Gallery & Video</h2>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px;">
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.additional_image_1.label }}</label>{{ form.additional_image_1 }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.additional_image_2.label }}</label>{{ form.additional_image_2 }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.additional_image_3.label }}</label>{{ form.additional_image_3 }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.video.label }}</label>{{ form.video }}</div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.additional_image_1.label }}</label>
+            {{ form.additional_image_1 }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.additional_image_2.label }}</label>
+            {{ form.additional_image_2 }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.additional_image_3.label }}</label>
+            {{ form.additional_image_3 }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.video.label }}</label>
+            {{ form.video }}
+          </div>
         </div>
       </div>
 
       <!-- Section: Business Info -->
       <div class="ns-card" style="padding: 24px;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
-          <span class="ns-stat-icon" style="width: 34px; height: 34px; border-radius: 10px;">
+          <div class="ns-stat-icon" style="width: 34px; height: 34px; border-radius: 10px;">
             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-          </span>
-          <h2 style="font-size: 16px; font-weight: 700; margin: 0;">Business Info</h2>
+          </div>
+          <h2 style="font-size: 16px; font-weight: 700; margin: 0; color: var(--text-primary);">Business Info</h2>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.name.label }}</label>{{ form.name }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.bussiness_name.label }}</label>{{ form.bussiness_name }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.location.label }}</label>{{ form.location }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.contact.label }}</label>{{ form.contact }}</div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.name.label }}</label>
+            {{ form.name }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.bussiness_name.label }}</label>
+            {{ form.bussiness_name }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.location.label }}</label>
+            {{ form.location }}
+          </div>
+          <div>
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">{{ form.contact.label }}</label>
+            {{ form.contact }}
+          </div>
         </div>
       </div>
 
@@ -109,32 +165,68 @@
       </div>
     </form>
 
-    <!-- Live Preview -->
+    <!-- Live Preview - Styled with NeuraSafe Design System -->
     <div class="animate-fade-in-up delay-2" style="position: sticky; top: calc(var(--nav-h) + 20px); align-self: start;">
       <div class="ns-card" style="padding: 20px;">
         <p style="color: var(--text-muted); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin: 0 0 12px;">Live Preview</p>
-        <div id="preview" style="padding: 22px; background: #fff; color: #1f2937; border-radius: var(--radius-md); min-height: 360px; box-shadow: var(--shadow-md);">
-          <h2 id="preview-welMessage" style="text-align: center; font-size: 18px; font-weight: 700; margin: 0 0 6px;">Hi, Welcome!</h2>
-          <h3 id="preview-title" style="text-align: center; font-size: 22px; font-weight: 800; margin: 0 0 14px;"></h3>
-          <img id="preview-profile-image" src="" alt="" style="width: 80px; height: 80px; border-radius: 50%; display: block; margin: 0 auto 14px; object-fit: cover;">
-          <p id="preview-description" style="text-align: center; font-size: 14px; margin: 0 0 16px;"></p>
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 14px;">
-            <img id="preview-additional-image-1" src="" alt="" style="width: 100%; height: 72px; object-fit: cover; border-radius: 8px;">
-            <img id="preview-additional-image-2" src="" alt="" style="width: 100%; height: 72px; object-fit: cover; border-radius: 8px;">
-            <img id="preview-additional-image-3" src="" alt="" style="width: 100%; height: 72px; object-fit: cover; border-radius: 8px;">
+        
+        <!-- Preview Card -->
+        <div id="preview" class="ns-card" style="padding: 28px; min-height: 420px; transition: all 0.3s ease;">
+          
+          <!-- Profile Image -->
+          <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+            <div id="preview-profile-image-container" style="width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: var(--glow-primary);">
+              <img id="preview-profile-image" src="" alt="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+              <span id="preview-profile-placeholder" style="font-size: 48px; font-weight: 600; color: white;">👤</span>
+            </div>
           </div>
-          <video id="preview-video" style="width: 100%; margin-bottom: 14px; display: none; border-radius: 8px;" controls></video>
-          <div style="display: flex; justify-content: center; gap: 14px; font-size: 13px; flex-wrap: wrap;">
-            <a id="preview-facebook" href="#" target="_blank" style="color: #1877F2;">Facebook</a>
-            <a id="preview-twitter" href="#" target="_blank" style="color: #1DA1F2;">Twitter</a>
-            <a id="preview-instagram" href="#" target="_blank" style="color: #E1306C;">Instagram</a>
-            <a id="preview-linkedin" href="#" target="_blank" style="color: #0A66C2;">LinkedIn</a>
+
+          <!-- Welcome Message -->
+          <h2 id="preview-welMessage" class="text-gradient-cyan" style="text-align: center; font-size: 20px; font-weight: 700; margin: 0 0 8px;">
+            Hi, Welcome!
+          </h2>
+          
+          <!-- Title -->
+          <h3 id="preview-title" style="text-align: center; font-size: 24px; font-weight: 800; margin: 0 0 12px; color: var(--text-primary);"></h3>
+          
+          <!-- Description -->
+          <p id="preview-description" style="text-align: center; font-size: 14px; margin: 0 0 20px; color: var(--text-secondary); line-height: 1.6;"></p>
+          
+          <!-- Gallery Images -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+            <div id="preview-additional-image-1-container" class="ns-stat-icon" style="height: 100px; border-radius: 12px; background: var(--card-bg); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <img id="preview-additional-image-1" src="" alt="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+              <span style="color: var(--text-muted); font-size: 12px;">Image 1</span>
+            </div>
+            <div id="preview-additional-image-2-container" class="ns-stat-icon" style="height: 100px; border-radius: 12px; background: var(--card-bg); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <img id="preview-additional-image-2" src="" alt="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+              <span style="color: var(--text-muted); font-size: 12px;">Image 2</span>
+            </div>
+            <div id="preview-additional-image-3-container" class="ns-stat-icon" style="height: 100px; border-radius: 12px; background: var(--card-bg); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <img id="preview-additional-image-3" src="" alt="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+              <span style="color: var(--text-muted); font-size: 12px;">Image 3</span>
+            </div>
           </div>
-          <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid #e5e7eb; display: flex; justify-content: center; gap: 10px; font-size: 11.5px; color: #6b7280; flex-wrap: wrap;">
-            <span id="preview-name"></span>
-            <span id="preview-bussiness_name"></span>
-            <span id="preview-location"></span>
-            <span id="preview-contact"></span>
+          
+          <!-- Video -->
+          <div id="preview-video-container" style="margin-bottom: 20px; display: none;">
+            <video id="preview-video" class="ns-card" style="width: 100%; border-radius: 12px;" controls></video>
+          </div>
+          
+          <!-- Social Links -->
+          <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+            <a id="preview-facebook" href="#" target="_blank" class="ns-btn-ghost" style="display: none; gap: 8px;">📘 Facebook</a>
+            <a id="preview-twitter" href="#" target="_blank" class="ns-btn-ghost" style="display: none; gap: 8px;">🐦 Twitter</a>
+            <a id="preview-instagram" href="#" target="_blank" class="ns-btn-ghost" style="display: none; gap: 8px;">📸 Instagram</a>
+            <a id="preview-linkedin" href="#" target="_blank" class="ns-btn-ghost" style="display: none; gap: 8px;">💼 LinkedIn</a>
+          </div>
+          
+          <!-- Business Info -->
+          <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--card-border); display: flex; justify-content: center; gap: 16px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap;">
+            <span id="preview-name" style="display: flex; align-items: center; gap: 4px;">👤 —</span>
+            <span id="preview-bussiness_name" style="display: flex; align-items: center; gap: 4px;">🏢 —</span>
+            <span id="preview-location" style="display: flex; align-items: center; gap: 4px;">📍 —</span>
+            <span id="preview-contact" style="display: flex; align-items: center; gap: 4px;">📞 —</span>
           </div>
         </div>
       </div>
@@ -148,47 +240,147 @@
 
 <script>
   function updatePreview() {
-    const val = id => (document.getElementById(id) || {}).value || '';
-    const file = id => { const el = document.getElementById(id); return el && el.files ? el.files[0] : null; };
-    const setText = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
-    setText('preview-title', val('id_title'));
-    setText('preview-description', val('id_description'));
-    setText('preview-name', val('id_name'));
-    setText('preview-location', val('id_location'));
-    setText('preview-contact', val('id_contact'));
-    setText('preview-bussiness_name', val('id_bussiness_name'));
-    const wm = val('id_welMessage'); if (wm) setText('preview-welMessage', wm);
-
-    function loadImg(fileEl, targetId) {
-      const f = file(fileEl);
-      if (f) { const r = new FileReader(); r.onload = e => { const t = document.getElementById(targetId); if (t) t.src = e.target.result; }; r.readAsDataURL(f); }
+    const val = (id) => document.getElementById(id)?.value || '';
+    const file = (id) => { const el = document.getElementById(id); return el && el.files?.length ? el.files[0] : null; };
+    
+    const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v || '—'; };
+    
+    // Text fields
+    const title = val('id_title');
+    const description = val('id_description');
+    const name = val('id_name');
+    const location = val('id_location');
+    const contact = val('id_contact');
+    const businessName = val('id_bussiness_name');
+    const welcomeMsg = val('id_welMessage');
+    
+    setText('preview-title', title || 'Your Title Here');
+    setText('preview-description', description || 'Your description will appear here...');
+    setText('preview-name', name || 'Your Name');
+    setText('preview-location', location || 'Location');
+    setText('preview-contact', contact || 'Contact Info');
+    setText('preview-bussiness_name', businessName || 'Business Name');
+    if (welcomeMsg) document.getElementById('preview-welMessage').textContent = welcomeMsg;
+    
+    // Profile Image
+    const profileImg = file('id_profile_image');
+    const profileImgEl = document.getElementById('preview-profile-image');
+    const profilePlaceholder = document.getElementById('preview-profile-placeholder');
+    if (profileImg && profileImgEl && profilePlaceholder) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        profileImgEl.src = e.target.result;
+        profileImgEl.style.display = 'block';
+        profilePlaceholder.style.display = 'none';
+      };
+      reader.readAsDataURL(profileImg);
+    } else if (profileImgEl && profilePlaceholder) {
+      profileImgEl.style.display = 'none';
+      profilePlaceholder.style.display = 'flex';
     }
-    loadImg('id_profile_image', 'preview-profile-image');
-    loadImg('id_additional_image_1', 'preview-additional-image-1');
-    loadImg('id_additional_image_2', 'preview-additional-image-2');
-    loadImg('id_additional_image_3', 'preview-additional-image-3');
-
-    const vf = file('id_video'); const ve = document.getElementById('preview-video');
-    if (vf && ve) { const r = new FileReader(); r.onload = e => { ve.src = e.target.result; ve.style.display = 'block'; }; r.readAsDataURL(vf); }
-    else if (ve) ve.style.display = 'none';
-
-    const bg = file('id_background_image'); const p = document.getElementById('preview');
-    if (bg && p) { const r = new FileReader(); r.onload = e => { p.style.backgroundImage = `url(${e.target.result})`; p.style.backgroundSize = 'cover'; }; r.readAsDataURL(bg); }
-
-    const bc = val('id_background_color'); if (bc && p) p.style.backgroundColor = bc;
-    const tc = val('id_text_color'); if (tc && p) p.style.color = tc;
-
-    [['facebook_url','preview-facebook'],['twitter_url','preview-twitter'],['instagram_url','preview-instagram'],['linkedin_url','preview-linkedin']].forEach(([src, tgt]) => {
-      const u = val('id_' + src); const a = document.getElementById(tgt);
-      if (a) { a.href = u || '#'; a.style.display = u ? 'inline' : 'none'; }
-    });
+    
+    // Additional Images
+    for (let i = 1; i <= 3; i++) {
+      const imgFile = file(`id_additional_image_${i}`);
+      const imgEl = document.getElementById(`preview-additional-image-${i}`);
+      const container = document.getElementById(`preview-additional-image-${i}-container`);
+      if (imgFile && imgEl && container) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          imgEl.src = e.target.result;
+          imgEl.style.display = 'block';
+          const placeholder = container.querySelector('span');
+          if (placeholder) placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(imgFile);
+      } else if (imgEl && container) {
+        imgEl.style.display = 'none';
+        const placeholder = container.querySelector('span');
+        if (placeholder) placeholder.style.display = 'flex';
+      }
+    }
+    
+    // Video
+    const videoFile = file('id_video');
+    const videoContainer = document.getElementById('preview-video-container');
+    const videoEl = document.getElementById('preview-video');
+    if (videoFile && videoEl && videoContainer) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        videoEl.src = e.target.result;
+        videoContainer.style.display = 'block';
+      };
+      reader.readAsDataURL(videoFile);
+    } else if (videoContainer) {
+      videoContainer.style.display = 'none';
+      if (videoEl) videoEl.src = '';
+    }
+    
+    // Background
+    const bgImage = file('id_background_image');
+    const previewDiv = document.getElementById('preview');
+    if (bgImage && previewDiv) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewDiv.style.backgroundImage = `url(${e.target.result})`;
+        previewDiv.style.backgroundSize = 'cover';
+        previewDiv.style.backgroundPosition = 'center';
+      };
+      reader.readAsDataURL(bgImage);
+    } else if (previewDiv) {
+      previewDiv.style.backgroundImage = '';
+    }
+    
+    // Colors
+    const bgColor = val('id_background_color');
+    if (bgColor && previewDiv) previewDiv.style.backgroundColor = bgColor;
+    
+    const textColor = val('id_text_color');
+    if (textColor && previewDiv) previewDiv.style.color = textColor;
+    
+    // Social Links
+    const socials = {
+      facebook_url: 'preview-facebook',
+      twitter_url: 'preview-twitter',
+      instagram_url: 'preview-instagram',
+      linkedin_url: 'preview-linkedin'
+    };
+    
+    for (const [field, elementId] of Object.entries(socials)) {
+      const url = val(`id_${field}`);
+      const element = document.getElementById(elementId);
+      if (element) {
+        if (url && url.trim()) {
+          element.href = url;
+          element.style.display = 'inline-flex';
+        } else {
+          element.style.display = 'none';
+        }
+      }
+    }
   }
+  
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('input, textarea, select').forEach(i => i.addEventListener('input', updatePreview));
+    // Add event listeners to all form inputs
+    const formInputs = document.querySelectorAll('input, textarea, select');
+    formInputs.forEach(input => {
+      input.addEventListener('input', updatePreview);
+      input.addEventListener('change', updatePreview);
+    });
+    
+    // Initial preview update
     updatePreview();
+    
+    // Loading spinner
     const form = document.querySelector('form');
-    const sp = document.getElementById('loading-spinner');
-    if (form && sp) form.addEventListener('submit', () => { sp.classList.remove('hidden'); sp.style.display = 'flex'; });
+    const spinner = document.getElementById('loading-spinner');
+    if (form && spinner) {
+      form.addEventListener('submit', () => {
+        spinner.classList.remove('hidden');
+        spinner.style.display = 'flex';
+      });
+    }
   });
 </script>
+
 {% endblock %}

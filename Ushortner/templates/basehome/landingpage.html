@@ -1,131 +1,343 @@
-
 {% extends 'basehome/base.html' %}
-
-{% block title %}ShortenIt - Your URL Shortener Solution{% endblock %}
+{% block title %}NeuraSafe - AI-Powered Link Management{% endblock %}
 {% load static %}
 {% block content %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 
+<link rel="stylesheet" href="{% static 'css/modern-theme.css' %}">
 <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon"> 
-<body class="bg-gray-100">
-    {% if user.is_authenticated %}
-    <div class="bg-gray-100 sm:ml-64 mt-8 overflow-y-auto max-h-screen"> 
-    {% else %}
-    <div class="bg-gray-100  mt-8 overflow-y-auto max-h-screen"> 
-    {% endif %}
-        <!-- Hero Section -->
-        <section class="bg-white py-12">
-            <div class="container mx-auto flex flex-col lg:flex-row items-center px-4 lg:px-0">
-                <div class="lg:w-1/2 lg:pr-8">
-                    <h1 class="text-4xl font-bold text-gray-800 leading-tight mb-4">Short and Customize and safe short URLs</h1>
-                    <p class="text-gray-600 mb-6">Our service is the fastest, easiest way to brand, track, and share short URLs using a custom domain name.</p>
-                    <a href="{% url 'signup' %}" class="bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600">Get Started</a>
-                </div>
-                <div class="lg:w-1/2 flex flex-wrap justify-center lg:justify-end mt-8 lg:mt-0">
-                    <div class="w-full sm:w-1/2 p-4">
-                        {% comment %} <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuQIo_8dYWvlx5YmV7SVapP-KeuK6GUGbyLw&s" alt="Example URL" class="rounded-lg shadow-lg"> {% endcomment %}
-                    </div>
-                    <div class="w-full sm:w-1/2 p-4">
-                        {% comment %} <img src="https://www.shutterstock.com/image-photo/female-hand-holding-black-mobile-260nw-2250578027.jpg" alt="QR Code" class="rounded-lg shadow-lg"> {% endcomment %}
-                    </div>
-                    <div class="w-full p-4">
-                        <img src="https://www.shutterstock.com/image-vector/analytics-monitoring-concept-business-team-600nw-2350586545.jpg" alt="Analytics" class="rounded-lg w-full h-full ">
-                    </div>
-                </div>
-            </div>
-        </section>
-    
-    
-    <footer class="bg-gray-800 text-gray-400 py-8">
-        <div class="bg-very-dark-violet py-8">
-            <div class="max-w-6xl mx-auto w-4/5 flex justify-between items-start flex-col md:flex-row">
-                <img src={logo} alt='QuiCcut' class="mt-5">
-                    <div class="flex flex-col mx-8 my-4 md:my-0 items-center md:items-start">
-                        <h6 class="text-white">Features</h6>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Link Shortening</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Branded Links</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Analytics</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Campaigns</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Link Detection using ml</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Create ADPages</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Create Ebussiness Card</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Create ADs</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Chats with creator</a>
-
-                    </div>
-                    <div class="flex flex-col mx-8 my-4 md:my-0 items-center md:items-start">
-                        <h6 class="text-white">Resources</h6>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Blog</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Developers</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Support</a>
-                    </div>
-                    <div class="flex flex-col mx-8 my-4 md:my-0 items-center md:items-start">
-                        <h6 class="text-white">Company</h6>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">About</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Our Team</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Careers</a>
-                        <a href="#" class="text-grey my-1 hover:text-cyan transition duration-500">Contact</a>
-                    </div>
-                <div class="flex mt-5">
-                    <FacebookIcon class="text-white w-8 h-8 mx-1 hover:text-cyan transition duration-500 cursor-pointer" />
-                    <TwitterIcon class="text-white w-8 h-8 mx-1 hover:text-cyan transition duration-500 cursor-pointer" />
-                    <PinterestIcon class="text-white w-8 h-8 mx-1 hover:text-cyan transition duration-500 cursor-pointer" />
-                    <InstagramIcon class="text-white w-8 h-8 mx-1 hover:text-cyan transition duration-500 cursor-pointer" />
-                </div>
-            </div>
-        </div>
-        
-    </footer>
-
-</body>
-
 
 <style>
-    body {
-      overflow: hidden; /* Prevents scrolling of the entire body */
-    }
-  @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+  /* Hero Background */
+  .hero-section {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0e1a 0%, #1a1f2e 50%, #0f1419 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
   }
   
-  @keyframes slideIn {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-  }
-  
-  .animate-fadeIn {
-      animation: fadeIn 1.5s ease-in-out;
-  }
-  
-  .animate-slideIn {
-      animation: slideIn 1s ease-in-out;
-  }
-  
-  .hover\:animate-pulse:hover {
-      animation: pulse 1s infinite;
-  }
-  
-  @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-  }
-  
-  @keyframes bgChange {
-    0% { background-image: url('{% static 'images/bg1.jpeg' %}'); }
-    25% { background-image: url('{% static 'images/bg2.jpg' %}'); }
-    50% { background-image: url('{% static 'images/bg3.jpg' %}'); }
-    75% { background-image: url('{% static 'images/bg4.webp' %}'); }
-    100% { background-image: url('{% static 'images/bg1.jpeg' %}'); }
-  }
-  
-  .animate-bgChange {
-    animation: bgChange 20s infinite; /* Adjust the duration for smoother transitions */
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072');
     background-size: cover;
     background-position: center;
-    z-index: -1;
-    opacity: 0.6; /* Adjust the opacity to your preference */
+    opacity: 0.1;
+    filter: blur(3px);
   }
-  </style>
+  
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .tagline {
+    color: var(--cyan);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+  
+  .hero-title {
+    font-size: clamp(48px, 8vw, 92px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #ffffff 0%, #94A3B8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .hero-description {
+    font-size: 20px;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin-bottom: 40px;
+    line-height: 1.7;
+  }
+  
+  .cta-buttons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  /* Features Section */
+  .features-section {
+    background: var(--primary-bg);
+    padding: 120px 0;
+    position: relative;
+  }
+  
+  .section-title {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  
+  .section-subtitle {
+    color: var(--neon-purple);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  
+  .section-heading {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 800;
+    color: white;
+    margin-bottom: 16px;
+  }
+  
+  .section-description {
+    color: var(--text-secondary);
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-top: 60px;
+  }
+  
+  .feature-item {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-lg);
+    padding: 40px;
+    transition: all 0.4s ease;
+  }
+  
+  .feature-item:hover {
+    transform: translateY(-10px);
+    border-color: var(--cyan);
+    box-shadow: 0 20px 60px rgba(0, 217, 255, 0.2);
+  }
+  
+  .feature-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin-bottom: 24px;
+  }
+  
+  .feature-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 12px;
+  }
+  
+  .feature-description {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  /* Footer */
+  .footer {
+    background: #0a0e1a;
+    padding: 60px 0 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  
+  .footer-section h6 {
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  .footer-section a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: block;
+    margin-bottom: 12px;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-section a:hover {
+    color: var(--cyan);
+  }
+  
+  @media (max-width: 768px) {
+    .hero-section {
+      min-height: 80vh;
+      padding: 100px 20px 60px;
+    }
+    
+    .cta-buttons {
+      flex-direction: column;
+    }
+    
+    .cta-buttons a,
+    .cta-buttons button {
+      width: 100%;
+      text-align: center;
+    }
+    
+    .features-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+  }
+</style>
+
+<div class="{% if user.is_authenticated %}ml-0 sm:ml-64{% endif %}">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container-custom hero-content">
+      <div class="animate-fade-in-up">
+        <span class="tagline">Smart Links • AI Security • Real-Time Insights</span>
+        <h1 class="hero-title">NeuraSafe</h1>
+        <p class="hero-description">
+          A next-gen AI-powered link management system that shortens URLs, detects threats, tracks analytics, and generates QR codes securely.
+        </p>
+        <div class="cta-buttons">
+          <a href="{% if user.is_authenticated %}{% url 'userdashboard' %}{% else %}{% url 'signup' %}{% endif %}" class="btn-gradient-cyan">Explore Features</a>
+          <a href="{% url 'about' %}" class="btn-outline-white">Learn More</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container-custom">
+      <div class="section-title">
+        <p class="section-subtitle">CORE FEATURES</p>
+        <h2 class="section-heading">What NeuraSafe Does</h2>
+        <p class="section-description">AI-powered secure link management platform</p>
+      </div>
+      
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <div class="feature-item">
+          <div class="feature-icon-wrapper icon-cyan">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="40" height="40">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Smart URL Shortening</h3>
+          <p class="feature-description">
+            Create clean, customizable short links with instant generation and branded aliases, allowing users to set their own custom names for links.
+          </p>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div class="feature-item">
+          <div class="feature-icon-wrapper icon-orange">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="40" height="40">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">AI/ML Threat Detection</h3>
+          <p class="feature-description">
+            Analyze URLs to identify potentially harmful or suspicious behavior using machine learning. The system evaluates patterns and signals to help ensure safer browsing and link sharing.
+          </p>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div class="feature-item">
+          <div class="feature-icon-wrapper icon-purple">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="40" height="40">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Click Analytics Dashboard</h3>
+          <p class="feature-description">
+            Track link performance in real time by monitoring clicks, user locations, devices, and engagement patterns. Gain insights into how and where your links are being used.
+          </p>
+        </div>
+        
+        <!-- Feature 4 -->
+        <div class="feature-item">
+          <div class="feature-icon-wrapper icon-cyan">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="40" height="40">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">QR Code Generator</h3>
+          <p class="feature-description">
+            Generate QR codes for each short link for easy sharing and scanning. Also allows users to download them for offline access.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container-custom">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h6>Features</h6>
+          <a href="#">Link Shortening</a>
+          <a href="#">Branded Links</a>
+          <a href="#">Analytics</a>
+          <a href="#">Threat Detection</a>
+          <a href="#">QR Codes</a>
+          <a href="#">Business Cards</a>
+        </div>
+        <div class="footer-section">
+          <h6>Resources</h6>
+          <a href="#">Blog</a>
+          <a href="#">Developers</a>
+          <a href="#">Support</a>
+          <a href="{% url 'api_documentation' %}">API Documentation</a>
+        </div>
+        <div class="footer-section">
+          <h6>Company</h6>
+          <a href="{% url 'about' %}">About</a>
+          <a href="#">Our Team</a>
+          <a href="#">Careers</a>
+          <a href="{% url 'contact' %}">Contact</a>
+        </div>
+      </div>
+      <div style="text-align: center; color: var(--text-muted); padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+        <p>© 2026 NeuraSafe. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // Add smooth scroll animation on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const elements = document.querySelectorAll('.animate-fade-in-up');
+    elements.forEach((el, index) => {
+      el.style.opacity = '0';
+      setTimeout(() => {
+        el.style.animation = `fadeInUp 0.8s ease-out ${index * 0.1}s forwards`;
+      }, 100);
+    });
+  });
+</script>
 
 {% endblock %}

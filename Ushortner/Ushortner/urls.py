@@ -17,6 +17,10 @@ urlpatterns = [
     path('detect/', include('detect.urls')),
     path('advertisements/', include('advertisements.urls')),
     path('landing/', include('landing_pages.urls')),
+      path('profile/', include('user_profile.urls')),
+    
+    # Public profile route
+    path('<str:username>/', profile_views.public_profile, name='public_profile'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

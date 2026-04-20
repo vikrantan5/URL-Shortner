@@ -1,375 +1,630 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{{ profile.display_name }} - {{ profile.meta_title|default:"My Links" }}</title>
     <meta name="description" content="{{ profile.meta_description|default:profile.bio }}">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Font Awesome for icons -->
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ profile.display_name }}">
+    <meta property="og:description" content="{{ profile.meta_description|default:profile.bio }}">
+    {% if profile.profile_image %}<meta property="og:image" content="{{ profile.profile_image.url }}">{% endif %}
+    <meta name="theme-color" content="{{ profile.background_color }}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
+        /* =========================================================
+           LINKTREE-STYLE PROFILE · scoped to .lt-page
+           Uses vanilla CSS so it never conflicts with other apps
+           ========================================================= */
         :root {
-            --primary-color: {{ profile.primary_color }};
-            --secondary-color: {{ profile.secondary_color }};
-            --background-color: {{ profile.background_color }};
-            --text-color: {{ profile.text_color }};
+            --lt-primary: {{ profile.primary_color|default:"#3B82F6" }};
+            --lt-secondary: {{ profile.secondary_color|default:"#8B5CF6" }};
+            --lt-bg: {{ profile.background_color|default:"#0f0f10" }};
+            --lt-text: {{ profile.text_color|default:"#FFFFFF" }};
         }
 
-        body {
-            background: {{ profile.background_color }};
-            color: {{ profile.text_color }};
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
+
+        body.lt-page {
+            min-height: 100vh;
+            color: var(--lt-text);
+            font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 32px 16px 96px;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        /* Gradient backgrounds for themes */
-        {% if profile.theme == 'gradient_purple' %}
-        body {
+        /* ========== THEMES ========== */
+        body.lt-theme-dark {
+            background: radial-gradient(1200px 600px at 10% -10%, rgba(59,130,246,0.18), transparent 60%),
+                        radial-gradient(1000px 600px at 100% 10%, rgba(139,92,246,0.18), transparent 60%),
+                        linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%);
+        }
+        body.lt-theme-light {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #0f172a;
+        }
+        body.lt-theme-gradient_purple {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        {% elif profile.theme == 'gradient_blue' %}
-        body {
+        body.lt-theme-gradient_blue {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
         }
-        {% elif profile.theme == 'gradient_pink' %}
-        body {
+        body.lt-theme-gradient_pink {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
-        {% elif profile.theme == 'neon_cyan' %}
-        body {
+        body.lt-theme-neon_cyan {
             background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
         }
-        {% elif profile.theme == 'sunset' %}
-        body {
-            background: linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%);
+        body.lt-theme-sunset {
+            background: linear-gradient(135deg, #ff9966 0%, #ff5e62 50%, #8e2de2 100%);
         }
-        {% elif profile.theme == 'ocean' %}
-        body {
+        body.lt-theme-ocean {
             background: linear-gradient(135deg, #2E3192 0%, #1BFFFF 100%);
         }
-        {% endif %}
 
-        /* Glassmorphism effect */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        /* Animated floating orbs for depth */
+        body.lt-page::before,
+        body.lt-page::after {
+            content: "";
+            position: fixed;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.35;
+        }
+        body.lt-page::before {
+            background: var(--lt-primary);
+            top: -120px;
+            left: -120px;
+            animation: lt-float 14s ease-in-out infinite;
+        }
+        body.lt-page::after {
+            background: var(--lt-secondary);
+            bottom: -140px;
+            right: -140px;
+            animation: lt-float 18s ease-in-out infinite reverse;
+        }
+        @keyframes lt-float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(40px, 60px); }
+        }
+        body.lt-theme-light::before, body.lt-theme-light::after { opacity: 0.25; }
+
+        /* ========== CONTAINER ========== */
+        .lt-container {
+            position: relative;
+            z-index: 2;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 0 4px;
         }
 
-        .link-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* ========== FLOATING SHARE BUTTON ========== */
+        .lt-share-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: var(--lt-text);
             cursor: pointer;
+            z-index: 100;
+            transition: transform .3s ease, background .3s ease;
+        }
+        body.lt-theme-light .lt-share-btn { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.1); color:#0f172a; }
+        .lt-share-btn:hover { transform: scale(1.1) rotate(8deg); background: rgba(255,255,255,0.16); }
+
+        /* ========== PROFILE HEADER ========== */
+        .lt-profile {
+            text-align: center;
+            padding: 12px 0 28px;
+            animation: lt-fadeUp .7s ease both;
         }
 
-        .link-card:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        .lt-avatar-wrap {
+            width: 112px; height: 112px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, var(--lt-primary), var(--lt-secondary));
+            box-shadow: 0 0 40px rgba(139,92,246,0.35), 0 0 80px rgba(59,130,246,0.25);
+        }
+        .lt-avatar {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            border: 3px solid rgba(0,0,0,0.35);
+            background: #0f0f10;
+        }
+        .lt-avatar-fallback {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 42px; font-weight: 800;
+            color: #fff;
+            background: linear-gradient(135deg, var(--lt-primary), var(--lt-secondary));
+            border: 3px solid rgba(0,0,0,0.35);
         }
 
-        .link-card:active {
-            transform: translateY(-2px) scale(1.01);
+        .lt-name {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 6px 0 6px;
+            letter-spacing: -0.02em;
+            color: var(--lt-text);
+        }
+        .lt-handle {
+            font-size: 14px;
+            opacity: 0.7;
+            margin: 0 0 10px;
+        }
+        .lt-bio {
+            font-size: 14.5px;
+            line-height: 1.55;
+            max-width: 380px;
+            margin: 8px auto 0;
+            opacity: 0.88;
         }
 
-        /* Fade-in animation */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* ========== SOCIAL ICONS ========== */
+        .lt-socials {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin: 22px 0 6px;
+            animation: lt-fadeUp .8s .15s ease both;
+        }
+        .lt-social-icon {
+            width: 42px; height: 42px;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: var(--lt-text);
+            text-decoration: none;
+            transition: transform .3s ease, background .3s ease, box-shadow .3s ease;
+            font-size: 18px;
+        }
+        body.lt-theme-light .lt-social-icon { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.12); color:#0f172a; }
+        .lt-social-icon:hover {
+            transform: translateY(-3px) scale(1.08);
+            background: rgba(255,255,255,0.18);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.25);
         }
 
-        .fade-in {
-            animation: fadeInUp 0.6s ease-out forwards;
+        /* ========== LINK CARDS ========== */
+        .lt-links {
+            margin-top: 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .lt-link {
+            display: flex; align-items: center; gap: 14px;
+            padding: 16px 18px;
+            border-radius: 18px;
+            text-decoration: none;
+            color: var(--lt-text);
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            transition: transform .3s cubic-bezier(.2,.8,.2,1),
+                        box-shadow .3s ease,
+                        background .3s ease,
+                        border-color .3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: lt-fadeUp .6s ease both;
+        }
+        body.lt-theme-light .lt-link {
+            background: rgba(255,255,255,0.7);
+            border-color: rgba(0,0,0,0.08);
+            color: #0f172a;
+            box-shadow: 0 6px 20px rgba(15,23,42,0.08);
+        }
+        .lt-link:nth-child(1) { animation-delay: .18s; }
+        .lt-link:nth-child(2) { animation-delay: .26s; }
+        .lt-link:nth-child(3) { animation-delay: .34s; }
+        .lt-link:nth-child(4) { animation-delay: .42s; }
+        .lt-link:nth-child(5) { animation-delay: .50s; }
+        .lt-link:nth-child(6) { animation-delay: .58s; }
+        .lt-link:nth-child(n+7) { animation-delay: .66s; }
+
+        .lt-link::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.18), transparent);
+            transform: translateX(-120%);
+            transition: transform .7s ease;
+            pointer-events: none;
+        }
+        .lt-link:hover::before { transform: translateX(120%); }
+        .lt-link:hover {
+            transform: translateY(-2px) scale(1.03);
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.25);
+            box-shadow: 0 16px 36px rgba(0,0,0,0.28);
+        }
+        body.lt-theme-light .lt-link:hover {
+            background: rgba(255,255,255,0.95);
+            border-color: rgba(0,0,0,0.12);
+            box-shadow: 0 14px 30px rgba(15,23,42,0.12);
+        }
+        .lt-link:active { transform: translateY(0) scale(0.99); }
+
+        .lt-link-icon {
+            width: 44px; height: 44px;
+            flex: 0 0 44px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            background: linear-gradient(135deg, var(--lt-primary), var(--lt-secondary));
+            color: #fff;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+        }
+        .lt-link-icon.thumb { padding: 0; background: transparent; box-shadow:none; overflow:hidden; }
+        .lt-link-icon.thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+
+        .lt-link-body { flex: 1; min-width: 0; text-align: center; padding: 0 4px; }
+        .lt-link-title {
+            font-size: 15.5px;
+            font-weight: 600;
+            margin: 0;
+            line-height: 1.25;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .lt-link-desc {
+            font-size: 12.5px;
+            opacity: 0.75;
+            margin: 3px 0 0;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
-        .fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
-        .fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
-        .fade-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
-
-        /* Profile image glow */
-        .profile-glow {
-            box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+        .lt-link-menu {
+            opacity: 0.6;
+            font-size: 16px;
+            padding: 6px;
+            flex: 0 0 auto;
         }
 
-        /* Neon glow effect */
-        .neon-glow {
-            box-shadow: 0 0 20px var(--primary-color),
-                        0 0 40px var(--primary-color),
-                        0 0 60px var(--primary-color);
+        .lt-empty {
+            text-align: center;
+            padding: 32px 16px;
+            opacity: 0.7;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px dashed rgba(255,255,255,0.2);
         }
 
-        /* Social icons */
-        .social-icon {
-            transition: all 0.3s ease;
+        /* ========== QR SECTION ========== */
+        .lt-qr-wrap {
+            margin-top: 36px;
+            text-align: center;
+            animation: lt-fadeUp .8s .6s ease both;
+        }
+        .lt-qr-card {
+            display: inline-block;
+            background: #fff;
+            padding: 18px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .lt-qr-card p { margin: 0 0 10px; color:#0f172a; font-size: 12px; font-weight: 600; }
+        .lt-qr-card img { width: 168px; height: 168px; display: block; margin: 0 auto; }
+        .lt-qr-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            margin-top: 14px;
+            padding: 11px 22px;
+            border-radius: 999px;
+            font-size: 14px; font-weight: 600;
+            color: var(--lt-text);
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            cursor: pointer;
+            transition: transform .3s ease, background .3s ease;
+        }
+        body.lt-theme-light .lt-qr-btn { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.12); color:#0f172a; }
+        .lt-qr-btn:hover { transform: scale(1.05); background: rgba(255,255,255,0.2); }
+
+        /* ========== FOOTER ========== */
+        .lt-footer {
+            margin-top: 36px;
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.5;
         }
 
-        .social-icon:hover {
-            transform: scale(1.2) rotate(5deg);
+        /* ========== SHARE MODAL ========== */
+        .lt-modal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center; justify-content: center;
+            z-index: 200;
+            padding: 16px;
+            animation: lt-fadeIn .25s ease;
+        }
+        .lt-modal.open { display: flex; }
+        .lt-modal-card {
+            max-width: 420px; width: 100%;
+            background: rgba(20, 20, 28, 0.85);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 22px;
+            color: #fff;
+        }
+        .lt-modal-head {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .lt-modal-head h2 { margin: 0; font-size: 18px; font-weight: 700; }
+        .lt-modal-close {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: rgba(255,255,255,0.08); border: none; color: #fff;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .lt-copy-row {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.08); border-radius: 12px;
+            padding: 10px 12px; margin-bottom: 14px;
+        }
+        .lt-copy-row input {
+            flex: 1; background: transparent; border: none; outline: none; color: #fff;
+            font-size: 13px;
+        }
+        .lt-copy-row button {
+            background: linear-gradient(135deg, var(--lt-primary), var(--lt-secondary));
+            color: #fff; border: none; padding: 8px 14px; border-radius: 10px;
+            font-weight: 600; cursor: pointer; font-size: 13px;
+        }
+        .lt-share-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .lt-share-grid a {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 14px; border-radius: 14px; text-align: center;
+            color: #fff; text-decoration: none;
+            transition: background .3s ease, transform .3s ease;
+        }
+        .lt-share-grid a:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+        .lt-share-grid i { font-size: 20px; display: block; margin-bottom: 6px; }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes lt-fadeUp {
+            from { opacity: 0; transform: translateY(22px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes lt-fadeIn {
+            from { opacity: 0; } to { opacity: 1; }
         }
 
-        /* QR Code styling */
-        .qr-container {
-            background: white;
-            padding: 1rem;
-            border-radius: 1rem;
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 480px) {
+            .lt-name { font-size: 22px; }
+            .lt-avatar-wrap { width: 100px; height: 100px; }
+            .lt-link { padding: 14px; }
+            .lt-link-title { font-size: 15px; }
         }
 
-        /* Share button pulse */
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.8;
-            }
-        }
-
-        .pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        /* Preview banner */
+        .lt-preview-banner {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: linear-gradient(90deg, var(--lt-primary), var(--lt-secondary));
+            color: #fff; padding: 8px; text-align: center;
+            font-size: 12px; font-weight: 600; z-index: 300;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-    
-    <!-- Share Button (floating) -->
-    <button onclick="openShareModal()" class="fixed top-6 right-6 glass-card text-white p-3 rounded-full hover:scale-110 transition-transform z-50">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
-        </svg>
-    </button>
+<body class="lt-page lt-theme-{{ profile.theme|default:'dark' }}">
 
-    <!-- Main Container -->
-    <div class="max-w-2xl w-full mx-auto">
-        
-        <!-- Profile Section -->
-        <div class="text-center mb-8 fade-in">
-            <!-- Profile Image -->
+{% if is_preview %}
+<div class="lt-preview-banner" data-testid="preview-banner">
+    <i class="fas fa-eye"></i> Preview mode &middot; <a href="{% url 'profile_dashboard' %}" style="color:#fff;text-decoration:underline;">Back to dashboard</a>
+</div>
+{% endif %}
+
+<!-- Floating Share Button -->
+<button class="lt-share-btn" onclick="ltOpenShare()" data-testid="share-button" aria-label="Share profile">
+    <i class="fas fa-share-alt"></i>
+</button>
+
+<div class="lt-container" data-testid="public-profile-container">
+
+    <!-- Profile Header -->
+    <div class="lt-profile" data-testid="profile-header">
+        <div class="lt-avatar-wrap">
             {% if profile.profile_image %}
-            <img src="{{ profile.profile_image.url }}" alt="{{ profile.display_name }}" 
-                 class="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-white profile-glow">
+                <img src="{{ profile.profile_image.url }}" alt="{{ profile.display_name }}" class="lt-avatar" data-testid="profile-avatar">
             {% else %}
-            <div class="w-32 h-32 rounded-full mx-auto mb-6 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-4xl font-bold text-white profile-glow">
-                {{ profile.display_name|first|upper }}
-            </div>
+                <div class="lt-avatar-fallback" data-testid="profile-avatar-fallback">{{ profile.display_name|first|upper }}</div>
             {% endif %}
-
-            <!-- Name -->
-            <h1 class="text-4xl font-bold mb-2 text-white">{{ profile.display_name }}</h1>
-            
-            <!-- Bio -->
-            {% if profile.bio %}
-            <p class="text-lg text-gray-200 mb-6 max-w-md mx-auto">{{ profile.bio }}</p>
-            {% endif %}
-
-            <!-- Social Icons Row -->
-            <div class="flex justify-center space-x-4 mb-8 fade-in-delay-1">
-                {% for link in links %}
-                    {% if link.link_type == 'instagram' %}
-                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon text-pink-400 hover:text-pink-300" data-testid="social-instagram">
-                        <i class="fab fa-instagram text-3xl"></i>
-                    </a>
-                    {% elif link.link_type == 'youtube' %}
-                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon text-red-500 hover:text-red-400" data-testid="social-youtube">
-                        <i class="fab fa-youtube text-3xl"></i>
-                    </a>
-                    {% elif link.link_type == 'twitter' %}
-                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon text-blue-400 hover:text-blue-300" data-testid="social-twitter">
-                        <i class="fab fa-x-twitter text-3xl"></i>
-                    </a>
-                    {% elif link.link_type == 'github' %}
-                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon text-gray-300 hover:text-white" data-testid="social-github">
-                        <i class="fab fa-github text-3xl"></i>
-                    </a>
-                    {% elif link.link_type == 'whatsapp' %}
-                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon text-green-400 hover:text-green-300" data-testid="social-whatsapp">
-                        <i class="fab fa-whatsapp text-3xl"></i>
-                    </a>
-                    {% elif link.link_type == 'linkedin' %}
-                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon text-blue-500 hover:text-blue-400" data-testid="social-linkedin">
-                        <i class="fab fa-linkedin text-3xl"></i>
-                    </a>
-                    {% endif %}
-                {% endfor %}
-            </div>
         </div>
-
-        <!-- Links Section -->
-        <div class="space-y-4 mb-8 fade-in-delay-2">
-            {% for link in links %}
-            <a href="/profile/links/{{ link.id }}/click/" 
-               target="_blank"
-               class="block link-card glass-card rounded-2xl p-6 hover:bg-white/20"
-               data-testid="link-card-{{ link.link_type }}"
-               style="{% if link.custom_color %}border-left: 4px solid {{ link.custom_color }};{% endif %}">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-4 flex-1">
-                        <!-- Icon or Thumbnail -->
-                        {% if link.thumbnail %}
-                        <img src="{{ link.thumbnail.url }}" alt="{{ link.title }}" class="w-16 h-16 rounded-lg object-cover">
-                        {% else %}
-                        <div class="text-3xl">
-                            {% if link.link_type == 'youtube' %}🎥
-                            {% elif link.link_type == 'instagram' %}📸
-                            {% elif link.link_type == 'whatsapp' %}💬
-                            {% elif link.link_type == 'twitter' %}🐦
-                            {% elif link.link_type == 'github' %}💻
-                            {% elif link.link_type == 'website' %}🌐
-                            {% elif link.link_type == 'linkedin' %}💼
-                            {% elif link.link_type == 'spotify' %}🎵
-                            {% else %}{{ link.icon|default:"🔗" }}
-                            {% endif %}
-                        </div>
-                        {% endif %}
-
-                        <!-- Title and Description -->
-                        <div class="flex-1">
-                            <h3 class="text-xl font-semibold text-white">{{ link.title }}</h3>
-                            {% if link.description %}
-                            <p class="text-sm text-gray-300 mt-1">{{ link.description }}</p>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Arrow -->
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </div>
-            </a>
-            {% endfor %}
-        </div>
-
-        <!-- QR Code Section -->
-        {% if qr_code and profile.qr_code_enabled %}
-        <div class="text-center fade-in-delay-3">
-            <div class="inline-block qr-container mb-4">
-                <p class="text-sm text-gray-800 mb-2 font-semibold">Scan to view on mobile</p>
-                <img id="qrCodeImage" src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="w-48 h-48 mx-auto">
-            </div>
-            <br>
-            <button onclick="downloadQRCode()" 
-                    class="glass-card px-6 py-3 rounded-full text-white font-semibold hover:scale-105 transition-transform"
-                    data-testid="download-qr-button">
-                <i class="fas fa-download mr-2"></i>Download QR Code
-            </button>
-        </div>
+        <h1 class="lt-name" data-testid="profile-display-name">{{ profile.display_name }}</h1>
+        <p class="lt-handle" data-testid="profile-username">@{{ profile.username }}</p>
+        {% if profile.bio %}
+            <p class="lt-bio" data-testid="profile-bio">{{ profile.bio|linebreaksbr }}</p>
         {% endif %}
 
-        <!-- Footer -->
-        <div class="text-center mt-12 text-gray-400 text-sm">
-            <p>Powered by LinkTree Clone</p>
+        <!-- Social Icons Row -->
+        {% if links %}
+        <div class="lt-socials" data-testid="social-icons-row">
+            {% for link in links %}
+                {% if link.link_type == 'instagram' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="lt-social-icon" data-testid="social-instagram" style="color:#E1306C;"><i class="fab fa-instagram"></i></a>
+                {% elif link.link_type == 'youtube' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="lt-social-icon" data-testid="social-youtube" style="color:#FF0000;"><i class="fab fa-youtube"></i></a>
+                {% elif link.link_type == 'twitter' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="lt-social-icon" data-testid="social-twitter"><i class="fab fa-x-twitter"></i></a>
+                {% elif link.link_type == 'github' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="lt-social-icon" data-testid="social-github"><i class="fab fa-github"></i></a>
+                {% elif link.link_type == 'whatsapp' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="lt-social-icon" data-testid="social-whatsapp" style="color:#25D366;"><i class="fab fa-whatsapp"></i></a>
+                {% elif link.link_type == 'linkedin' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="lt-social-icon" data-testid="social-linkedin" style="color:#0A66C2;"><i class="fab fa-linkedin-in"></i></a>
+                {% elif link.link_type == 'facebook' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="lt-social-icon" data-testid="social-facebook" style="color:#1877F2;"><i class="fab fa-facebook-f"></i></a>
+                {% elif link.link_type == 'tiktok' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="lt-social-icon" data-testid="social-tiktok"><i class="fab fa-tiktok"></i></a>
+                {% elif link.link_type == 'spotify' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="lt-social-icon" data-testid="social-spotify" style="color:#1DB954;"><i class="fab fa-spotify"></i></a>
+                {% endif %}
+            {% endfor %}
         </div>
+        {% endif %}
     </div>
 
-    <!-- Share Modal -->
-    <div id="shareModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="glass-card rounded-3xl p-8 max-w-md w-full">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-white">Share Profile</h2>
-                <button onclick="closeShareModal()" class="text-gray-400 hover:text-white">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
-            </div>
+    <!-- Links Section -->
+    <div class="lt-links" data-testid="links-container">
+        {% for link in links %}
+            <a href="{% url 'track_link_click' link.id %}"
+               target="_blank"
+               rel="noopener"
+               class="lt-link"
+               data-testid="link-card-{{ link.id }}"
+               data-link-type="{{ link.link_type }}"
+               {% if link.custom_color %}style="border-left: 3px solid {{ link.custom_color }};"{% endif %}>
+                {% if link.thumbnail %}
+                    <span class="lt-link-icon thumb"><img src="{{ link.thumbnail.url }}" alt="{{ link.title }}"></span>
+                {% else %}
+                    <span class="lt-link-icon">
+                        {% if link.link_type == 'youtube' %}<i class="fab fa-youtube"></i>
+                        {% elif link.link_type == 'instagram' %}<i class="fab fa-instagram"></i>
+                        {% elif link.link_type == 'whatsapp' %}<i class="fab fa-whatsapp"></i>
+                        {% elif link.link_type == 'twitter' %}<i class="fab fa-x-twitter"></i>
+                        {% elif link.link_type == 'github' %}<i class="fab fa-github"></i>
+                        {% elif link.link_type == 'linkedin' %}<i class="fab fa-linkedin-in"></i>
+                        {% elif link.link_type == 'facebook' %}<i class="fab fa-facebook-f"></i>
+                        {% elif link.link_type == 'tiktok' %}<i class="fab fa-tiktok"></i>
+                        {% elif link.link_type == 'spotify' %}<i class="fab fa-spotify"></i>
+                        {% elif link.link_type == 'website' %}<i class="fas fa-globe"></i>
+                        {% else %}{% if link.icon %}{{ link.icon }}{% else %}<i class="fas fa-link"></i>{% endif %}
+                        {% endif %}
+                    </span>
+                {% endif %}
 
-            <div class="space-y-4">
-                <!-- Copy Link -->
-                <div class="flex items-center space-x-2 bg-white/10 rounded-lg p-3">
-                    <input type="text" id="profileUrl" value="{{ profile_url }}" readonly 
-                           class="flex-1 bg-transparent text-white outline-none">
-                    <button onclick="copyProfileUrl()" class="text-blue-400 hover:text-blue-300 font-semibold">
-                        Copy
-                    </button>
+                <div class="lt-link-body">
+                    <p class="lt-link-title" data-testid="link-title-{{ link.id }}">{{ link.title }}</p>
+                    {% if link.description %}<p class="lt-link-desc">{{ link.description }}</p>{% endif %}
                 </div>
 
-                <!-- Share buttons -->
-                <div class="grid grid-cols-2 gap-3">
-                    <a href="https://twitter.com/intent/tweet?url={{ profile_url }}&text=Check out {{ profile.display_name }}'s profile!" 
-                       target="_blank" class="glass-card p-4 rounded-xl text-center hover:bg-white/20 transition">
-                        <i class="fab fa-twitter text-2xl text-blue-400 mb-2"></i>
-                        <p class="text-sm text-white">Twitter</p>
-                    </a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ profile_url }}" 
-                       target="_blank" class="glass-card p-4 rounded-xl text-center hover:bg-white/20 transition">
-                        <i class="fab fa-facebook text-2xl text-blue-500 mb-2"></i>
-                        <p class="text-sm text-white">Facebook</p>
-                    </a>
-                    <a href="https://wa.me/?text=Check out {{ profile.display_name }}'s profile: {{ profile_url }}" 
-                       target="_blank" class="glass-card p-4 rounded-xl text-center hover:bg-white/20 transition">
-                        <i class="fab fa-whatsapp text-2xl text-green-400 mb-2"></i>
-                        <p class="text-sm text-white">WhatsApp</p>
-                    </a>
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ profile_url }}" 
-                       target="_blank" class="glass-card p-4 rounded-xl text-center hover:bg-white/20 transition">
-                        <i class="fab fa-linkedin text-2xl text-blue-600 mb-2"></i>
-                        <p class="text-sm text-white">LinkedIn</p>
-                    </a>
-                </div>
+                <span class="lt-link-menu"><i class="fas fa-chevron-right"></i></span>
+            </a>
+        {% empty %}
+            <div class="lt-empty" data-testid="no-links-message">
+                <i class="fas fa-link" style="font-size:24px; margin-bottom:8px; display:block; opacity:.6;"></i>
+                No links have been added yet.
             </div>
-        </div>
+        {% endfor %}
     </div>
 
-    <script>
-        // QR Code Download
-        function downloadQRCode() {
-            const qrImage = document.getElementById('qrCodeImage');
-            if (!qrImage) {
-                alert('QR Code not available');
-                return;
-            }
+    <!-- QR Code Section -->
+    {% if qr_code and profile.qr_code_enabled %}
+    <div class="lt-qr-wrap" data-testid="qr-section">
+        <div class="lt-qr-card">
+            <p>Scan to view on mobile</p>
+            <img id="qrCodeImage" src="data:image/png;base64,{{ qr_code }}" alt="QR Code for {{ profile.username }}">
+        </div>
+        <br>
+        <button onclick="ltDownloadQR()" class="lt-qr-btn" data-testid="download-qr-button">
+            <i class="fas fa-download"></i> Download QR Code
+        </button>
+    </div>
+    {% endif %}
 
-            const link = document.createElement('a');
-            link.href = qrImage.src;
-            link.download = '{{ profile.username }}-qr-code.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+    <div class="lt-footer" data-testid="profile-footer">
+        <p>Powered by <strong>LinkTree Clone</strong></p>
+    </div>
+</div>
 
-        // Share Modal
-        function openShareModal() {
-            document.getElementById('shareModal').classList.remove('hidden');
-        }
+<!-- Share Modal -->
+<div id="ltShareModal" class="lt-modal" data-testid="share-modal" onclick="if(event.target===this) ltCloseShare()">
+    <div class="lt-modal-card">
+        <div class="lt-modal-head">
+            <h2>Share Profile</h2>
+            <button class="lt-modal-close" onclick="ltCloseShare()" data-testid="share-modal-close" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="lt-copy-row">
+            <input type="text" id="ltProfileUrl" value="{{ profile_url }}" readonly data-testid="profile-url-input">
+            <button onclick="ltCopyUrl(this)" data-testid="copy-url-button">Copy</button>
+        </div>
+        <div class="lt-share-grid">
+            <a href="https://twitter.com/intent/tweet?url={{ profile_url|urlencode }}&text=Check out {{ profile.display_name|urlencode }}'s profile" target="_blank" rel="noopener" data-testid="share-twitter">
+                <i class="fab fa-x-twitter"></i><span>Twitter</span>
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ profile_url|urlencode }}" target="_blank" rel="noopener" data-testid="share-facebook">
+                <i class="fab fa-facebook"></i><span>Facebook</span>
+            </a>
+            <a href="https://wa.me/?text={{ profile_url|urlencode }}" target="_blank" rel="noopener" data-testid="share-whatsapp">
+                <i class="fab fa-whatsapp"></i><span>WhatsApp</span>
+            </a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ profile_url|urlencode }}" target="_blank" rel="noopener" data-testid="share-linkedin">
+                <i class="fab fa-linkedin"></i><span>LinkedIn</span>
+            </a>
+        </div>
+    </div>
+</div>
 
-        function closeShareModal() {
-            document.getElementById('shareModal').classList.add('hidden');
-        }
-
-        // Copy Profile URL
-        function copyProfileUrl() {
-            const urlInput = document.getElementById('profileUrl');
-            urlInput.select();
+<script>
+    function ltDownloadQR() {
+        const img = document.getElementById('qrCodeImage');
+        if (!img) { alert('QR code not available'); return; }
+        const a = document.createElement('a');
+        a.href = img.src;
+        a.download = '{{ profile.username }}-qr-code.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+    function ltOpenShare() { document.getElementById('ltShareModal').classList.add('open'); }
+    function ltCloseShare() { document.getElementById('ltShareModal').classList.remove('open'); }
+    function ltCopyUrl(btn) {
+        const input = document.getElementById('ltProfileUrl');
+        input.select(); input.setSelectionRange(0, 99999);
+        try {
+            navigator.clipboard.writeText(input.value);
+        } catch (e) {
             document.execCommand('copy');
-            
-            // Visual feedback
-            const button = event.target;
-            const originalText = button.textContent;
-            button.textContent = 'Copied!';
-            button.classList.add('text-green-400');
-            
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.classList.remove('text-green-400');
-            }, 2000);
         }
-
-        // Close modal on outside click
-        document.getElementById('shareModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeShareModal();
-            }
-        });
-    </script>
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 1800);
+    }
+    // Web Share API fallback on floating btn (long-press not used; just modal)
+</script>
 </body>
 </html>

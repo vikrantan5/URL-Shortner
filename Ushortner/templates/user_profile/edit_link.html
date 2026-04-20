@@ -1,84 +1,85 @@
 {% extends 'basehome/base.html' %}
-{% block title %}Edit Link{% endblock %}
-
-{% block content %}
+{% block title %}Edit Link — NeuraSafe{% endblock %}
 {% load static %}
+{% block content %}
+<link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<body class="overflow-hidden">
-<div class="bg-gray-100 p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen">
-    <div class="max-w-2xl mx-auto">
-        
-        <div class="mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">Edit Link</h1>
-            <p class="text-gray-600">Update link details</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md p-8">
-            <form method="post" enctype="multipart/form-data" class="space-y-6">
-                {% csrf_token %}
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Link Type *</label>
-                    {{ form.link_type }}
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Title *</label>
-                    {{ form.title }}
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">URL *</label>
-                    {{ form.url }}
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Icon (Emoji or Text)</label>
-                    {{ form.icon }}
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                    {{ form.description }}
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Custom Color</label>
-                        {{ form.custom_color }}
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
-                        {{ form.display_order }}
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Thumbnail (Optional)</label>
-                    {% if link.thumbnail %}
-                    <img src="{{ link.thumbnail.url }}" alt="Current" class="w-20 h-20 rounded mb-2">
-                    {% endif %}
-                    {{ form.thumbnail }}
-                </div>
-
-                <div class="flex items-center space-x-2">
-                    {{ form.is_active }}
-                    <label class="text-sm font-medium text-gray-700">Active</label>
-                </div>
-
-                <div class="flex items-center justify-between pt-6 border-t">
-                    <a href="{% url 'profile_dashboard' %}" class="text-gray-600 hover:text-gray-800">
-                        <i class="fas fa-arrow-left mr-2"></i>Cancel
-                    </a>
-                    <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-                        <i class="fas fa-save mr-2"></i>Save Changes
-                    </button>
-                </div>
-            </form>
-        </div>
-
+<div class="ns-app-content" data-testid="edit-link-root">
+  <div class="animate-fade-in-up" style="max-width: 720px; margin: 0 auto;">
+    <div style="margin-bottom: 28px;">
+      <p style="color: var(--text-muted); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin: 0 0 8px;">Linktree Links</p>
+      <h1 style="font-size: clamp(28px, 4.5vw, 40px); font-weight: 800; letter-spacing: -0.02em; margin: 0;">
+        Edit <span class="text-gradient-cyan">Link</span>
+      </h1>
+      <p style="color: var(--text-secondary); margin: 10px 0 0;">Refine how this link shows on your profile.</p>
     </div>
-</div>
-</body>
 
+    <form method="post" enctype="multipart/form-data" class="ns-card animate-fade-in-up delay-1" style="padding: 32px; display: flex; flex-direction: column; gap: 20px;" data-testid="edit-link-form">
+      {% csrf_token %}
+
+      <div>
+        <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Link Type *</label>
+        {{ form.link_type }}
+      </div>
+      <div>
+        <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Title *</label>
+        {{ form.title }}
+      </div>
+      <div>
+        <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">URL *</label>
+        {{ form.url }}
+      </div>
+      <div>
+        <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Icon (Emoji or Text)</label>
+        {{ form.icon }}
+      </div>
+      <div>
+        <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Description</label>
+        {{ form.description }}
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div>
+          <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Custom Color</label>
+          {{ form.custom_color }}
+        </div>
+        <div>
+          <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Display Order</label>
+          {{ form.display_order }}
+        </div>
+      </div>
+
+      <div>
+        <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Thumbnail (Optional)</label>
+        {% if link.thumbnail %}
+        <img src="{{ link.thumbnail.url }}" alt="Current" style="width: 72px; height: 72px; border-radius: 12px; object-fit: cover; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1);">
+        {% endif %}
+        {{ form.thumbnail }}
+      </div>
+
+      <label style="display: inline-flex; align-items: center; gap: 10px; color: var(--text-soft); font-size: 14px; cursor: pointer;">
+        {{ form.is_active }}
+        <span>Active</span>
+      </label>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.06);">
+        <a href="{% url 'profile_dashboard' %}" class="ns-btn-ghost">
+          <i class="fas fa-arrow-left"></i> Cancel
+        </a>
+        <button type="submit" class="ns-btn-primary">
+          <i class="fas fa-save"></i> Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .ns-app-content input[type="color"] { width: 100% !important; height: 44px !important; padding: 4px !important; background: rgba(15, 23, 42, 0.6) !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: var(--radius-md) !important; cursor: pointer; }
+  .ns-app-content input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); }
+  .ns-app-content input[type="file"] { color: var(--text-soft); padding: 10px !important; }
+  .ns-app-content input[type="file"]::file-selector-button { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 13px; margin-right: 12px; cursor: pointer; transition: all 0.25s ease; }
+  .ns-app-content input[type="file"]::file-selector-button:hover { filter: brightness(1.1); }
+</style>
 {% endblock %}

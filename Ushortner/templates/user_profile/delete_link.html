@@ -1,44 +1,38 @@
 {% extends 'basehome/base.html' %}
-{% block title %}Delete Link{% endblock %}
-
-{% block content %}
+{% block title %}Delete Link — NeuraSafe{% endblock %}
 {% load static %}
+{% block content %}
+<link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<body class="overflow-hidden">
-<div class="bg-gray-100 p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen">
-    <div class="max-w-xl mx-auto">
-        
-        <div class="bg-white rounded-lg shadow-md p-8">
-            <div class="text-center mb-6">
-                <svg class="w-20 h-20 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                </svg>
-                <h1 class="text-2xl font-bold text-gray-900 mb-2">Delete Link</h1>
-                <p class="text-gray-600">Are you sure you want to delete this link?</p>
-            </div>
-
-            <div class="bg-gray-50 rounded-lg p-4 mb-6">
-                <p class="font-semibold text-gray-800">{{ link.title }}</p>
-                <p class="text-sm text-gray-600">{{ link.url }}</p>
-            </div>
-
-            <form method="post">
-                {% csrf_token %}
-                <div class="flex items-center justify-center space-x-4">
-                    <a href="{% url 'profile_dashboard' %}" 
-                       class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition">
-                        Cancel
-                    </a>
-                    <button type="submit" 
-                            class="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition">
-                        <i class="fas fa-trash mr-2"></i>Delete Link
-                    </button>
-                </div>
-            </form>
+<div class="ns-app-content" data-testid="delete-link-root">
+  <div class="animate-fade-in-up" style="max-width: 560px; margin: 0 auto;">
+    <div class="ns-card" style="padding: 40px 36px;" data-testid="delete-link-card">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="width: 88px; height: 88px; margin: 0 auto 18px; border-radius: 22px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(239,68,68,0.22), rgba(236,72,153,0.15)); border: 1px solid rgba(239,68,68,0.35); box-shadow: 0 0 30px rgba(239,68,68,0.15);">
+          <i class="fas fa-triangle-exclamation" style="font-size: 34px; color: #fca5a5;"></i>
         </div>
+        <h1 style="font-size: 26px; font-weight: 800; margin: 0 0 8px;">Delete <span style="background: linear-gradient(135deg, #fca5a5, #f9a8d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Link?</span></h1>
+        <p style="color: var(--text-secondary); margin: 0;">This action cannot be undone.</p>
+      </div>
 
+      <div class="ns-card" style="padding: 18px 20px; margin-bottom: 24px; border-color: rgba(239,68,68,0.2); background: rgba(239,68,68,0.04);">
+        <p style="color: #fff; font-weight: 700; font-size: 15px; margin: 0 0 4px;">{{ link.title }}</p>
+        <p style="color: var(--text-muted); font-size: 13px; margin: 0; word-break: break-all;">{{ link.url }}</p>
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <a href="{% url 'profile_dashboard' %}" class="ns-btn-ghost" style="padding: 11px 24px;">
+            Cancel
+          </a>
+          <button type="submit" data-testid="confirm-delete-link" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: var(--radius-md); border: none; cursor: pointer; font-weight: 600; font-size: 15px; color: #fff; background: linear-gradient(135deg, #ef4444 0%, #ec4899 100%); box-shadow: 0 6px 20px rgba(239,68,68,0.35); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px rgba(239,68,68,0.5)';" onmouseout="this.style.transform='';this.style.boxShadow='0 6px 20px rgba(239,68,68,0.35)';">
+            <i class="fas fa-trash"></i> Delete Link
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
-</body>
-
 {% endblock %}

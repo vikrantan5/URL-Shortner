@@ -1,50 +1,75 @@
 {% extends 'basehome/base.html' %}
-
-{% block title %}Settings {% endblock %}
-
-{% block content %}
-
+{% block title %}Settings — NeuraSafe{% endblock %}
 {% load static %}
+{% block content %}
 <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
-<body class="overflow-hidden">
-<div class="bg-gray-100 p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen">
-  <div class="w-full h-screen bg-gray-100">
-    <div class="container mx-auto p-8">
-        <h1 class="text-3xl font-bold mb-4">Settings</h1>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-        {% if errors %}
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-                <ul>
-                    {% for error in errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-
-        <form method="post">
-            {% csrf_token %}
-            <div class="mb-4">
-                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
-                <input type="text" id="username" name="username" value="{{ request.user.username }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div class="mb-4">
-                <label for="password1" class="block text-gray-700 text-sm font-bold mb-2">New Password</label>
-                <input type="password" id="password1" name="password1" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div class="mb-4">
-                <label for="password2" class="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
-                <input type="password" id="password2" name="password2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            <div class="flex items-center justify-between">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Save Changes
-                </button>
-            </div>
-        </form>
+<div class="ns-app-content" data-testid="settings-root">
+  <div class="animate-fade-in-up" style="max-width: 720px; margin: 0 auto;">
+    <div style="margin-bottom: 28px;">
+      <p style="color: var(--text-muted); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin: 0 0 8px;">Account</p>
+      <h1 style="font-size: clamp(28px, 4.5vw, 42px); font-weight: 800; letter-spacing: -0.02em; margin: 0;">
+        Account <span class="text-gradient-cyan">Settings</span>
+      </h1>
+      <p style="color: var(--text-secondary); margin: 10px 0 0;">Manage your profile, credentials and security preferences.</p>
     </div>
-</div>
-</div>
-</body>
 
+    {% if errors %}
+    <div class="ns-card" style="padding: 16px 20px; margin-bottom: 18px; background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.3);" data-testid="settings-errors">
+      <p style="color: #fecaca; font-weight: 700; margin: 0 0 6px;"><i class="fas fa-triangle-exclamation" style="margin-right: 8px;"></i>Please review:</p>
+      <ul style="margin: 0; padding-left: 20px; color: #fca5a5; font-size: 13.5px;">
+        {% for error in errors %}<li>{{ error }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <form method="post" class="ns-card animate-fade-in-up delay-1" style="padding: 32px; display: flex; flex-direction: column; gap: 22px;" data-testid="settings-form">
+      {% csrf_token %}
+
+      <div style="display: flex; align-items: center; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+        <div style="width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: #fff; background: linear-gradient(135deg, var(--primary), var(--secondary)); box-shadow: var(--glow-cyan);">
+          {{ request.user.username|first|upper }}
+        </div>
+        <div>
+          <p style="color: #fff; font-weight: 700; font-size: 16px; margin: 0;">{{ request.user.username }}</p>
+          <p style="color: var(--text-muted); font-size: 13px; margin: 2px 0 0;">{{ request.user.email|default:"No email on file" }}</p>
+        </div>
+      </div>
+
+      <section>
+        <h2 style="font-size: 16px; font-weight: 700; margin: 0 0 14px; display: flex; align-items: center; gap: 10px;">
+          <span class="ns-stat-icon" style="width: 30px; height: 30px; border-radius: 9px;"><i class="fas fa-user" style="font-size: 12px;"></i></span>
+          Profile
+        </h2>
+        <label for="username" style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Username</label>
+        <input type="text" id="username" name="username" value="{{ request.user.username }}" data-testid="settings-username" style="width: 100%;">
+      </section>
+
+      <section style="padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.06);">
+        <h2 style="font-size: 16px; font-weight: 700; margin: 0 0 6px; display: flex; align-items: center; gap: 10px;">
+          <span class="ns-stat-icon" style="width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(236,72,153,0.15)); color: #c4b5fd;"><i class="fas fa-lock" style="font-size: 12px;"></i></span>
+          Change Password
+        </h2>
+        <p style="color: var(--text-muted); font-size: 12.5px; margin: 0 0 14px;">Leave blank if you don't want to update your password.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+          <div>
+            <label for="password1" style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">New Password</label>
+            <input type="password" id="password1" name="password1" placeholder="••••••••" data-testid="settings-password1" style="width: 100%;">
+          </div>
+          <div>
+            <label for="password2" style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Confirm Password</label>
+            <input type="password" id="password2" name="password2" placeholder="••••••••" data-testid="settings-password2" style="width: 100%;">
+          </div>
+        </div>
+      </section>
+
+      <div style="display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.06);">
+        <button type="submit" class="ns-btn-primary" data-testid="settings-save-btn">
+          <i class="fas fa-save"></i> Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

@@ -1,69 +1,43 @@
-<!-- business_card_confirm_delete.html -->
-
 {% extends "basehome/base.html" %}
-
-{% block content %}
-
+{% block title %}Delete Business Card — NeuraSafe{% endblock %}
 {% load static %}
+{% block content %}
 <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
-<div class="bg-gray-100 p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen"> 
-    <div class="w-full h-screen bg-gray-100">
-    <div class="text-center container mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <h1 class="text-3xl font-bold mb-4">Delete Business Card</h1>
-        <p>Are you sure you want to delete this business card?</p>
-        <form method="post" class="mt-4">
-            {% csrf_token %}
-            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
-            <a href="{% url 'business_card_list' %}" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Cancel</a>
-        </form>
+
+<div class="ns-app-content" data-testid="delete-card-root">
+  <div class="animate-fade-in-up" style="max-width: 560px; margin: 0 auto;">
+    <div class="ns-card" style="padding: 40px 36px;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="width: 88px; height: 88px; margin: 0 auto 18px; border-radius: 22px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(239,68,68,0.22), rgba(236,72,153,0.15)); border: 1px solid rgba(239,68,68,0.35); box-shadow: 0 0 30px rgba(239,68,68,0.15);">
+            <svg width="36" height="36" fill="none" stroke="#fca5a5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        </div>
+        <h1 style="font-size: 26px; font-weight: 800; margin: 0 0 8px;">Delete <span style="background: linear-gradient(135deg, #fca5a5, #f9a8d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Business Card?</span></h1>
+        <p style="color: var(--text-secondary); margin: 0;">This action cannot be undone.</p>
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <a href="{% url 'business_card_list' %}" class="ns-btn-ghost" style="padding: 11px 24px;">Cancel</a>
+          <button type="submit" data-testid="confirm-delete-card" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: var(--radius-md); border: none; cursor: pointer; font-weight: 600; font-size: 15px; color: #fff; background: linear-gradient(135deg, #ef4444 0%, #ec4899 100%); box-shadow: 0 6px 20px rgba(239,68,68,0.35); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px rgba(239,68,68,0.5)';" onmouseout="this.style.transform='';this.style.boxShadow='0 6px 20px rgba(239,68,68,0.35)';">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M10 7V4a2 2 0 012-2h0a2 2 0 012 2v3"/></svg>
+            Delete
+          </button>
+        </div>
+      </form>
     </div>
-</div>
-</div>  
-
-
-
-<div id="loading-spinner" class="hidden fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
-    <div class="loader"></div>
   </div>
-  
-  <style>
-    .loader {
-      border: 8px solid #f3f3f3;
-      border-radius: 50%;
-      border-top: 8px solid #3498db;
-      width: 60px;
-      height: 60px;
-      -webkit-animation: spin 2s linear infinite;
-      animation: spin 2s linear infinite;
-      color: #3498db;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  
-    @-webkit-keyframes spin {
-      0% { -webkit-transform: rotate(0deg); }
-      100% { -webkit-transform: rotate(360deg); }
-    }
-  
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  
-   
-  </style>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const form = document.querySelector('form');
-      const loadingSpinner = document.getElementById('loading-spinner');
-  
-      form.addEventListener('submit', function () {
-        loadingSpinner.classList.remove('hidden');
-      });
-    });
-  </script>
-  
+</div>
+
+<div id="loading-spinner" class="hidden" style="position: fixed; inset: 0; background: rgba(2,6,23,0.75); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center;">
+  <div class="loader-modern"></div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+    const sp = document.getElementById('loading-spinner');
+    if (form && sp) form.addEventListener('submit', () => { sp.classList.remove('hidden'); sp.style.display = 'flex'; });
+  });
+</script>
 {% endblock %}

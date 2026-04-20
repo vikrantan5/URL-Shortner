@@ -18,14 +18,11 @@
       </button>
     </form>
 
-    {% if short_url and qr_code %}
+      {% if short_url and qr_code %}
     <div class="flex mt-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 p-6">
       <div class="flex-shrink-0">
           <h2 class="text-xl font-bold mb-2">QR Code</h2>
-          <img src="data:image/jpeg;base64,{{ qr_code }}" alt="QR Code" class="w-40 h-40 object-cover rounded-md">
-          <a href="data:image/jpeg;base64,{{ qr_code|safe }}" download="qr_code.jpg" class="mt-4 inline-block">
-              
-          </a>
+          <img id="qrCodeImage" src="data:image/jpeg;base64,{{ qr_code }}" alt="QR Code" class="w-40 h-40 object-cover rounded-md">
       </div>
       <div class="flex-grow ml-6">
           <h2 class="text-xl font-bold mb-2">Your Customized Short URL</h2>
@@ -39,7 +36,7 @@
                   </svg>
               </button>
           </p>
-          <button class="mt-16 inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          <button onclick="downloadQRCode()" class="mt-16 inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             Download QR Code
             <svg class="w-6 h-6 text-white ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                 <path fill-rule="evenodd" d="M13 11.15V4a1 1 0 1 0-2 0v7.15L8.78 8.374a1 1 0 1 0-1.56 1.25l4 5a1 1 0 0 0 1.56 0l4-5a1 1 0 1 0-1.56-1.25L13 11.15Z" clip-rule="evenodd"/>
@@ -95,7 +92,31 @@
 </style>
 
 </body>
-<script>
+<<script>
+   // QR Code Download Function
+  function downloadQRCode() {
+    const qrImage = document.getElementById('qrCodeImage');
+    if (!qrImage) {
+      alert('QR Code not found!');
+      return;
+    }
+
+    const link = document.createElement('a');
+    link.href = qrImage.src;
+    link.download = 'qr-code-{{ short_url.short_code|default:"download" }}.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // Copy to Clipboard Function
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+      alert('Link copied to clipboard!');
+    }, function() {
+      alert('Failed to copy link');
+    });
+  }
   document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('form');
     const loadingSpinner = document.getElementById('loading-spinner');

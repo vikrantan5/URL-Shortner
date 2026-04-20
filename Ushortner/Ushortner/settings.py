@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'whitenoise',
     'advertisements',
     'landing_pages',
+     'user_profile',
 
 ]
 

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.display_name }} - {{ profile.meta_title|default:"My Links" }}</title>
+    <meta name="description" content="{{ profile.meta_description|default:profile.bio }}">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: {{ profile.primary_color }};
+            --secondary-color: {{ profile.secondary_color }};
+            --background-color: {{ profile.background_color }};
+            --text-color: {{ profile.text_color }};
+        }
+
+        body {
+            background: {{ profile.background_color }};
+            color: {{ profile.text_color }};
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Gradient backgrounds for themes */
+        {% if profile.theme == 'gradient_purple' %}
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        {% elif profile.theme == 'gradient_blue' %}
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+        {% elif profile.theme == 'gradient_pink' %}
+        body {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        {% elif profile.theme == 'neon_cyan' %}
+        body {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        }
+        {% elif profile.theme == 'sunset' %}
+        body {
+            background: linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%);
+        }
+        {% elif profile.theme == 'ocean' %}
+        body {
+            background: linear-gradient(135deg, #2E3192 0%, #1BFFFF 100%);
+        }
+        {% endif %}
+
+        /* Glassmorphism effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .link-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .link-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .link-card:active {
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .fade-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+
+        /* Profile image glow */
+        .profile-glow {
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Neon glow effect */
+        .neon-glow {
+            box-shadow: 0 0 20px var(--primary-color),
+                        0 0 40px var(--primary-color),
+                        0 0 60px var(--primary-color);
+        }
+
+        /* Social icons */
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        /* QR Code styling */
+        .qr-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+        }
+
+        /* Share button pulse */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    
+    <!-- Share Button (floating) -->
+    <button onclick="openShareModal()" class="fixed top-6 right-6 glass-card text-white p-3 rounded-full hover:scale-110 transition-transform z-50">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+        </svg>
+    </button>
+
+    <!-- Main Container -->
+    <div class="max-w-2xl w-full mx-auto">
+        
+        <!-- Profile Section -->
+        <div class="text-center mb-8 fade-in">
+            <!-- Profile Image -->
+            {% if profile.profile_image %}
+            <img src="{{ profile.profile_image.url }}" alt="{{ profile.display_name }}" 
+                 class="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-white profile-glow">
+            {% else %}
+            <div class="w-32 h-32 rounded-full mx-auto mb-6 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-4xl font-bold text-white profile-glow">
+                {{ profile.display_name|first|upper }}
+            </div>
+            {% endif %}
+
+            <!-- Name -->
+            <h1 class="text-4xl font-bold mb-2 text-white">{{ profile.display_name }}</h1>
+            
+            <!-- Bio -->
+            {% if profile.bio %}
+            <p class="text-lg text-gray-200 mb-6 max-w-md mx-auto">{{ profile.bio }}</p>
+            {% endif %}
+
+            <!-- Social Icons Row -->
+            <div class="flex justify-center space-x-4 mb-8 fade-in-delay-1">
+                {% for link in links %}
+                    {% if link.link_type == 'instagram' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon text-pink-400 hover:text-pink-300" data-testid="social-instagram">
+                        <i class="fab fa-instagram text-3xl"></i>
+                    </a>
+                    {% elif link.link_type == 'youtube' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon text-red-500 hover:text-red-400" data-testid="social-youtube">
+                        <i class="fab fa-youtube text-3xl"></i>
+                    </a>
+                    {% elif link.link_type == 'twitter' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon text-blue-400 hover:text-blue-300" data-testid="social-twitter">
+                        <i class="fab fa-x-twitter text-3xl"></i>
+                    </a>
+                    {% elif link.link_type == 'github' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon text-gray-300 hover:text-white" data-testid="social-github">
+                        <i class="fab fa-github text-3xl"></i>
+                    </a>
+                    {% elif link.link_type == 'whatsapp' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon text-green-400 hover:text-green-300" data-testid="social-whatsapp">
+                        <i class="fab fa-whatsapp text-3xl"></i>
+                    </a>
+                    {% elif link.link_type == 'linkedin' %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener" class="social-icon text-blue-500 hover:text-blue-400" data-testid="social-linkedin">
+                        <i class="fab fa-linkedin text-3xl"></i>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Links Section -->
+        <div class="space-y-4 mb-8 fade-in-delay-2">
+            {% for link in links %}
+            <a href="/profile/links/{{ link.id }}/click/" 
+               target="_blank"
+               class="block link-card glass-card rounded-2xl p-6 hover:bg-white/20"
+               data-testid="link-card-{{ link.link_type }}"
+               style="{% if link.custom_color %}border-left: 4px solid {{ link.custom_color }};{% endif %}">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4 flex-1">
+                        <!-- Icon or Thumbnail -->
+                        {% if link.thumbnail %}
+                        <img src="{{ link.thumbnail.url }}" alt="{{ link.title }}" class="w-16 h-16 rounded-lg object-cover">
+                        {% else %}
+                        <div class="text-3xl">
+                            {% if link.link_type == 'youtube' %}🎥
+                            {% elif link.link_type == 'instagram' %}📸
+                            {% elif link.link_type == 'whatsapp' %}💬
+                            {% elif link.link_type == 'twitter' %}🐦
+                            {% elif link.link_type == 'github' %}💻
+                            {% elif link.link_type == 'website' %}🌐
+                            {% elif link.link_type == 'linkedin' %}💼
+                            {% elif link.link_type == 'spotify' %}🎵
+                            {% else %}{{ link.icon|default:"🔗" }}
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Title and Description -->
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold text-white">{{ link.title }}</h3>
+                            {% if link.description %}
+                            <p class="text-sm text-gray-300 mt-1">{{ link.description }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Arrow -->
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- QR Code Section -->
+        {% if qr_code and profile.qr_code_enabled %}
+        <div class="text-center fade-in-delay-3">
+            <div class="inline-block qr-container mb-4">
+                <p class="text-sm text-gray-800 mb-2 font-semibold">Scan to view on mobile</p>
+                <img id="qrCodeImage" src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="w-48 h-48 mx-auto">
+            </div>
+            <br>
+            <button onclick="downloadQRCode()" 
+                    class="glass-card px-6 py-3 rounded-full text-white font-semibold hover:scale-105 transition-transform"
+                    data-testid="download-qr-button">
+                <i class="fas fa-download mr-2"></i>Download QR Code
+            </button>
+        </div>
+        {% endif %}
+
+        <!-- Footer -->
+        <div class="text-center mt-12 text-gray-400 text-sm">
+            <p>Powered by LinkTree Clone</p>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="glass-card rounded-3xl p-8 max-w-md w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Share Profile</h2>
+                <button onclick="closeShareModal()" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Copy Link -->
+                <div class="flex items-center space-x-2 bg-white/10 rounded-lg p-3">
+                    <input type="text" id="profileUrl" value="{{ profile_url }}" readonly 
+                           class="flex-1 bg-transparent text-white outline-none">
+                    <button onclick="copyProfileUrl()" class="text-blue-400 hover:text-blue-300 font-semibold">
+                        Copy
+                    </button>
+                </div>
+
+                <!-- Share buttons -->
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="https://twitter.com/intent/tweet?url={{ profile_url }}&text=Check out {{ profile.display_name }}'s profile!" 
+                       target="_blank" class="glass-card p-4 rounded-xl text-center hover:bg-white/20 transition">
+                        <i class="fab fa-twitter text-2xl text-blue-400 mb-2"></i>
+                        <p class="text-sm text-white">Twitter</p>
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ profile_url }}" 
+                       target="_blank" class="glass-card p-4 rounded-xl text-center hover:bg-white/20 transition">
+                        <i class="fab fa-facebook text-2xl text-blue-500 mb-2"></i>
+                        <p class="text-sm text-white">Facebook</p>
+                    </a>
+                    <a href="https://wa.me/?text=Check out {{ profile.display_name }}'s profile: {{ profile_url }}" 
+                       target="_blank" class="glass-card p-4 rounded-xl text-center hover:bg-white/20 transition">
+                        <i class="fab fa-whatsapp text-2xl text-green-400 mb-2"></i>
+                        <p class="text-sm text-white">WhatsApp</p>
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ profile_url }}" 
+                       target="_blank" class="glass-card p-4 rounded-xl text-center hover:bg-white/20 transition">
+                        <i class="fab fa-linkedin text-2xl text-blue-600 mb-2"></i>
+                        <p class="text-sm text-white">LinkedIn</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // QR Code Download
+        function downloadQRCode() {
+            const qrImage = document.getElementById('qrCodeImage');
+            if (!qrImage) {
+                alert('QR Code not available');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.href = qrImage.src;
+            link.download = '{{ profile.username }}-qr-code.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Share Modal
+        function openShareModal() {
+            document.getElementById('shareModal').classList.remove('hidden');
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.add('hidden');
+        }
+
+        // Copy Profile URL
+        function copyProfileUrl() {
+            const urlInput = document.getElementById('profileUrl');
+            urlInput.select();
+            document.execCommand('copy');
+            
+            // Visual feedback
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            button.classList.add('text-green-400');
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('text-green-400');
+            }, 2000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('shareModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeShareModal();
+            }
+        });
+    </script>
+</body>
+</html>

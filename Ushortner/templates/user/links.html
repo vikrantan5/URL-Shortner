@@ -8,44 +8,42 @@
 {% load static %}
 <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
 
-<body class="overflow-hidden">
-<div class="bg-gray-100 p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen ">
-   <div class="w-full h-screen bg-gray-100">
+<body>
+<div class="ns-app-content" data-testid="my-links-root">
+   <div class="animate-fade-in-up">
     <div>
-        <h1 class="text-3xl m-4">My Shortened Links</h1>
-        
+        <div style="margin-bottom: 24px;">
+          <p style="color: var(--text-muted); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Workspace</p>
+          <h1 style="font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: -0.02em; margin: 0;">My Shortened <span class="text-gradient-cyan">Links</span></h1>
+        </div>
+
         <!-- Search Form -->
-        <form method="get" class="mb-6 flex items-center space-x-4">
-            <input type="text" name="search" placeholder="Search by shorted url code" class="border border-gray-300 rounded p-2" value="{{ request.GET.search }}">
-            
+        <form method="get" class="ns-card" style="padding: 16px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;" data-testid="links-search-form">
+            <input type="text" name="search" placeholder="Search by short code" value="{{ request.GET.search }}" style="flex: 1; min-width: 220px;">
             <label for="date_from" class="sr-only">Date from</label>
-            <input type="date" name="date_from" id="date_from" class="border border-gray-300 rounded p-2" value="{{ request.GET.date_from }}">
-            
+            <input type="date" name="date_from" id="date_from" value="{{ request.GET.date_from }}">
             <label for="date_to" class="sr-only">Date to</label>
-            <input type="date" name="date_to" id="date_to" class="border border-gray-300 rounded p-2" value="{{ request.GET.date_to }}">
-            
-              
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
+            <input type="date" name="date_to" id="date_to" value="{{ request.GET.date_to }}">
+            <button type="submit" class="ns-btn-primary" style="padding: 10px 20px;">Search</button>
         </form>
         
         {% if user_short_urls %}
             {% for short_url in user_short_urls %}
-            <div class="relative mb-4 max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <div class="flex">
-                    {% if short_url.qr_code_data %}
-                    <div class="flex-shrink-0 mr-4">
-                        <img src="data:image/jpeg;base64,{{ short_url.qr_code_data|safe }}" alt="QR Code" class="w-48 h-48 border-gray-300 p-1 rounded-lg">
+            <div class="ns-card" style="position: relative; padding: 20px; margin-bottom: 16px; display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start;" data-testid="link-card">
+                {% if short_url.qr_code_data %}
+                <div style="flex-shrink: 0;">
+                    <img src="data:image/jpeg;base64,{{ short_url.qr_code_data|safe }}" alt="QR Code" style="width: 140px; height: 140px; border-radius: 12px; padding: 6px; background: #fff;">
+                </div>
+                {% endif %}
+                <div style="flex: 1; min-width: 240px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;">
+                        <span class="ns-badge active">Active</span>
+                        <a href="/{{ short_url.short_code }}" class="text-gradient-cyan" style="font-size: 18px; font-weight: 700; text-decoration: none;">/{{ short_url.short_code }}</a>
                     </div>
-                    {% endif %}
-                    <div>
-                        <a href="/{{ short_url.short_code }}">
-                            <h5 class="mb-2 text-2xl font-semibold tracking-tight text-blue-700 dark:text-white">http://127.0.0.1:8000/{{ short_url.short_code }}</h5>
-                        </a>
-                        <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{{ short_url.original_url }}</p>
-                        <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{{ short_url.date_created }}</p>
-                        <a href="{% url 'url_details_view' short_code=short_url.short_code %}" class="text-blue-700 hover:underline">View Detail</a>
-
-                    </div>
+                    <p style="color: var(--text-muted); font-size: 14px; margin: 0 0 6px; word-break: break-all;">{{ short_url.original_url }}</p>
+                    <p style="color: var(--text-muted); font-size: 12px; margin: 0 0 12px;">Created {{ short_url.date_created }}</p>
+                    <a href="{% url 'url_details_view' short_code=short_url.short_code %}" class="ns-btn-ghost" style="padding: 7px 14px; font-size: 13px;">View Detail →</a>
+                </div>
                     
             
                 <!-- Share and Delete buttons for larger screens -->
@@ -138,8 +136,9 @@
             </div>
             {% endfor %}
         {% else %}
-            <div class="max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <p class="text-center text-lg"> You have not created any short URLs.</p>
+            <div class="ns-card" style="padding: 40px; text-align: center;">
+                <p style="color: var(--text-muted); font-size: 16px;">You have not created any short URLs yet.</p>
+                <a href="{% url 'userdashboard' %}" class="ns-btn-primary" style="margin-top: 16px;">Create Your First Link</a>
             </div>
         {% endif %}
     </div>

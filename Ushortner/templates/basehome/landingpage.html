@@ -209,7 +209,10 @@
   }
 </style>
 
-<div class="{% if user.is_authenticated %}ml-0 sm:ml-64{% endif %}">
+<div style="{% if user.is_authenticated %}margin-left: 260px;{% endif %}" class="ns-landing-wrap">
+  <style>
+    @media (max-width: 768px) { .ns-landing-wrap { margin-left: 0 !important; } }
+  </style>
   <!-- Hero Section -->
   <section class="hero-section">
     <div class="container-custom hero-content">

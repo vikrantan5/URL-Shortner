@@ -103,13 +103,13 @@ def user_dashboard(request):
         if ShortURL.objects.filter(original_url=original_url).exists():
             short_url = ShortURL.objects.get(original_url=original_url)
             short_code = short_url.short_code
-            qr_code = generate_qr_code(request.build_absolute_uri(f'/{short_code}'))
+            qr_code = generate_qr_code(request.build_absolute_uri(f'/s/{short_code}'))
         else:
             short_code = str(uuid.uuid4())[:5]
             short_url = ShortURL.objects.create(original_url=original_url, short_code=short_code, qr_code_data = generate_qr_code(original_url), user=request.user)
-            qr_code = generate_qr_code(request.build_absolute_uri(f'/{short_code}'))
+            qr_code = generate_qr_code(request.build_absolute_uri(f'/s/{short_code}'))
             short_url.save()
-        short_code = request.build_absolute_uri(f'/{short_code}')
+        short_code = request.build_absolute_uri(f'/s/{short_code}')
 
     context = {
         'user_short_urls': user_short_urls,
@@ -199,8 +199,7 @@ def analytics_view(request):
 def url_details_view(request, short_code):
     short_url = get_object_or_404(ShortURL, short_code=short_code)
     clicks = Click.objects.filter(short_url=short_url)
-    qr_coded = generate_qr_code(f"http://127.0.0.1:8000/{short_url.short_code}")
-
+    qr_coded = generate_qr_code(request.build_absolute_uri(f"/s/{short_url.short_code}"))
     clicks_per_day = clicks.extra({'day': 'date(timestamp)'}).values('day').annotate(clicks=Count('id')).order_by('day')
     clicks_per_day = list(clicks_per_day)
 
@@ -220,7 +219,7 @@ def url_details_view(request, short_code):
     return render(request, 'user/url_details.html', context)
 
 
-#views for customizing the a link
+
 @login_required
 def customize_short_url_view(request):
     short_url = None
@@ -240,7 +239,7 @@ def customize_short_url_view(request):
                     original_url=original_url,
                     short_code=custom_short_code
                 )
-                qr_code = generate_qr_code(f"http://127.0.0.1:8000/{short_url.short_code}")
+                qr_code = generate_qr_code(request.build_absolute_uri(f"/s/{short_url.short_code}"))
     else:
         form = CustomShortURLForm()
     

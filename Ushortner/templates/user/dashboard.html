@@ -4,167 +4,342 @@
 {% block content %}
 
 <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
-<div id="content" class="bg-gray-100 p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen">
-    <div class="w-full h-screen bg-gray-100">
-        <div class="relative bg-white rounded-lg p-6">
-            <p class="text-xl italic mb-4">{{ greeting }} {{ user.username }}</p>
-            <h1 class="text-center text-2xl font-bold mb-8">Analytics Dashboard</h1>
+<style>
+    /* Modern Gradient Background */
+    .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .gradient-bg-2 {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .gradient-bg-3 {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    .gradient-bg-4 {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+    
+    /* Glassmorphism cards */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Smooth animations */
+    .stat-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Chart container improvements */
+    .chart-container {
+        position: relative;
+        height: 300px;
+        width: 100%;
+    }
+    
+    .chart-pie-container {
+        position: relative;
+        height: 250px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white p-6 text-center rounded-lg shadow-md">
-                    <h2 class="text-xl font-semibold">Total Links</h2>
-                    <p class="text-3xl">{{ total_links }}</p>
+<div id="content" class="p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+    <div class="w-full">
+        <!-- Header Section with Gradient -->
+        <div class="relative glass-card rounded-2xl p-8 mb-6 gradient-bg text-white">
+            <h1 class="text-4xl font-bold mb-2">{{ greeting }}, {{ user.username }}! 👋</h1>
+            <p class="text-lg opacity-90">Here's your analytics overview</p>
+        </div>
+
+        <!-- Stats Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+            <div class="stat-card glass-card p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-semibold uppercase tracking-wide">Total Links</p>
+                        <p class="text-5xl font-bold gradient-bg bg-clip-text text-transparent mt-2">{{ total_links }}</p>
+                        <p class="text-sm text-gray-500 mt-1">🔗 Shortened URLs</p>
+                    </div>
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                        </svg>
+                    </div>
                 </div>
-                <div class="bg-white text-center p-6 rounded-lg shadow-md">
-                    <h2 class="text-xl font-semibold">Total Clicks</h2>
-                    <p class="text-3xl">{{ total_clicks }}</p>
+            </div>
+            
+            <div class="stat-card glass-card p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-semibold uppercase tracking-wide">Total Clicks</p>
+                        <p class="text-5xl font-bold gradient-bg-2 bg-clip-text text-transparent mt-2">{{ total_clicks }}</p>
+                        <p class="text-sm text-gray-500 mt-1">👆 Total Interactions</p>
+                    </div>
+                    <div class="w-16 h-16 gradient-bg-2 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
+                        </svg>
+                    </div>
                 </div>
-               
-                
             </div>
         </div>
-            <div class="mt-6 relative bg-white p-6">
-                <h2 class="text-xl font-semibold mb-4">Top Performing Links</h2>
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Short URL</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks</th>
+
+        <!-- Top Performing Links -->
+        <div class="glass-card rounded-2xl p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">🏆 Top Performing Links</h2>
+                <span class="px-4 py-2 gradient-bg rounded-full text-white text-sm font-semibold">Top 10</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="border-b-2 border-gray-200">
+                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Short Code</th>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Clicks</th>
+                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Performance</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="divide-y divide-gray-200">
                         {% for link, click_count in best_links %}
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <a href="{{ link.get_absolute_url }}" class="text-blue-600 hover:text-blue-800">{{ link.short_code }}</a>
+                        <tr class="hover:bg-purple-50 transition-colors">
+                            <td class="px-6 py-4">
+                                <a href="/s/{{ link.short_code }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                                    {{ link.short_code }}
+                                </a>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ click_count }} clicks</td>
+                            <td class="px-6 py-4">
+                                <span class="px-3 py-1 rounded-full text-sm font-semibold gradient-bg-2 text-white">
+                                    {{ click_count }} clicks
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="gradient-bg h-2 rounded-full" style="width: {{ click_count|add:0 }}%"></div>
+                                </div>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        {% if best_link %}
+        <!-- Detailed Analytics for Top Link -->
+        <div class="glass-card rounded-2xl p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                📊 Analytics Details: <span class="gradient-bg bg-clip-text text-transparent">{{ best_link.short_code }}</span>
+            </h2>
+            
+            <!-- Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Clicks Per Day -->
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">📈 Clicks Per Day</h3>
+                    <div class="chart-container">
+                        <canvas id="clicksPerDayChart"></canvas>
+                    </div>
+                </div>
                 
+                <!-- Referrer Distribution -->
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">🌐 Referrer Sources</h3>
+                    <div class="chart-pie-container">
+                        <canvas id="referrerChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Device Distribution -->
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">📱 Device Types</h3>
+                    <div class="chart-pie-container">
+                        <canvas id="deviceChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Browser Distribution -->
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">🌐 Browser Usage</h3>
+                    <div class="chart-pie-container">
+                        <canvas id="browserChart"></canvas>
+                    </div>
+                </div>
             </div>
 
-            {% if best_link %}
-            <div class="mt-6 relative bg-white p-6">
-                <h2 class="text-xl font-semibold mb-4">Details for Top Link: {{ best_link.short_code }}</h2>
-                <div class="overflow-y-auto max-h-80">
-                    <table class="min-w-full bg-white border border-gray-200 divide-y divide-gray-200 rounded-lg shadow-sm mb-6">
-                        <thead class="bg-gray-50">
+            <!-- Click Details Table -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-700">Recent Clicks</h3>
+                </div>
+                <div class="overflow-y-auto max-h-96">
+                    <table class="min-w-full">
+                        <thead class="bg-gray-50 sticky top-0">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referer</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Browser</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Timestamp</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Referer</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Browser</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Device</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="divide-y divide-gray-200">
                             {% for click in clicks %}
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ click.timestamp }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ click.referer }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ click.browser }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ click.device }}</td>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-900">{{ click.timestamp|date:"M d, Y H:i" }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ click.referer|default:"Direct" }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ click.browser|default:"Unknown" }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ click.device|default:"Unknown" }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                    <div class="bg-white p-4 rounded-lg shadow-md">
-                        <p>Clicks Per Day</p>
-                        <canvas id="clicksPerDayChart" class="w-full h-64"></canvas>
-                    </div>
-                    <div class="bg-white p-4 rounded-lg shadow-md">
-                        <p>Referrer Distribution</p>
-                        <canvas id="referrerChart" class="w-48 h-48"></canvas>
-                    </div>
-                    <div class="bg-white p-4 rounded-lg shadow-md">
-                        <p>Device Distribution</p>
-                        <canvas id="deviceChart" class="w-48 h-48"></canvas>
-                    </div>
-                    <div class="bg-white p-4 rounded-lg shadow-md">
-                        <p>Browser Distribution</p>
-                        <canvas id="browserChart" class="w-48 h-48"></canvas>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
         </div>
+        {% else %}
+        <!-- No Data State -->
+        <div class="glass-card rounded-2xl p-12 text-center">
+            <svg class="w-24 h-24 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+            <h3 class="text-2xl font-bold text-gray-700 mb-2">No Analytics Data Yet</h3>
+            <p class="text-gray-600">Create your first short URL to see analytics!</p>
+            <a href="{% url 'userdashboard' %}" class="inline-block mt-6 px-6 py-3 gradient-bg text-white rounded-full font-semibold hover:shadow-lg transition-shadow">
+                Create Short URL
+            </a>
+        </div>
+        {% endif %}
     </div>
 </div>
 
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
 <script>
-    // Data for Clicks Per Day Chart
+    // Modern color palette
+    const modernColors = {
+        purple: 'rgba(102, 126, 234, 0.8)',
+        pink: 'rgba(245, 87, 108, 0.8)',
+        blue: 'rgba(79, 172, 254, 0.8)',
+        green: 'rgba(67, 233, 123, 0.8)',
+        yellow: 'rgba(255, 206, 86, 0.8)',
+        orange: 'rgba(255, 159, 64, 0.8)',
+    };
+
+    const gradientColors = [
+        'rgba(102, 126, 234, 0.9)',
+        'rgba(245, 87, 108, 0.9)',
+        'rgba(79, 172, 254, 0.9)',
+        'rgba(67, 233, 123, 0.9)',
+        'rgba(255, 206, 86, 0.9)',
+        'rgba(255, 159, 64, 0.9)'
+    ];
+
+    // Data from Django
     var clicksPerDayData = {{ clicks_per_day|safe }};
-    var clicksPerDayLabels = clicksPerDayData.map(item => item.day);
-    var clicksPerDayCounts = clicksPerDayData.map(item => item.clicks);
-
-    // Data for Referrer Chart
     var referrerData = {{ referrer_distribution|safe }};
-    var referrerLabels = referrerData.map(item => item.referer);
-    var referrerCounts = referrerData.map(item => item.count);
-
-   
-    // Data for Browser Chart
     var browserData = {{ browser_distribution|safe }};
-    var browserLabels = browserData.map(item => item.browser);
-    var browserCounts = browserData.map(item => item.count);
-    
-    // Data for Device Chart
     var deviceData = {{ device_distribution|safe }};
-    var deviceLabels = deviceData.map(item => item.device);
-    var deviceCounts = deviceData.map(item => item.count);
 
-    // Clicks Per Day Chart
-    new Chart(document.getElementById('clicksPerDayChart'), {
-        type: 'bar',
+    // Clicks Per Day Chart with Gradient
+    const ctx1 = document.getElementById('clicksPerDayChart').getContext('2d');
+    const gradient = ctx1.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(102, 126, 234, 0.8)');
+    gradient.addColorStop(1, 'rgba(118, 75, 162, 0.3)');
+
+    new Chart(ctx1, {
+        type: 'line',
         data: {
-            labels: clicksPerDayLabels,
+            labels: clicksPerDayData.map(item => item.day),
             datasets: [{
-                label: 'Clicks Per Day',
-                data: clicksPerDayCounts,
-                backgroundColor: 'rgba(247, 119, 185, 0.8)',
+                label: 'Clicks',
+                data: clicksPerDayData.map(item => item.clicks),
+                backgroundColor: gradient,
+                borderColor: 'rgba(102, 126, 234, 1)',
+                borderWidth: 3,
                 fill: true,
-                barThickness: 24,
-                categoryPercentage: 0.8,
-                barPercentage: 0.9
+                tension: 0.4,
+                pointRadius: 5,
+                pointBackgroundColor: 'rgba(102, 126, 234, 1)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointHoverRadius: 7
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        font: { size: 14, weight: 'bold' },
+                        color: '#374151'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 13 }
+                }
+            },
             scales: {
-                x: { type: 'time', time: { unit: 'day' } },
-                y: { beginAtZero: true }
+                x: {
+                    type: 'time',
+                    time: { unit: 'day' },
+                    grid: { display: false },
+                    ticks: { color: '#6b7280', font: { size: 12 } }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                    ticks: { color: '#6b7280', font: { size: 12 } }
+                }
             }
         }
     });
 
     // Referrer Chart
     new Chart(document.getElementById('referrerChart'), {
-        type: 'pie',
+        type: 'doughnut',
         data: {
-            labels: referrerLabels,
+            labels: referrerData.map(item => item.referer || 'Direct'),
             datasets: [{
-                label: 'Referrer',
-                data: referrerCounts,
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+                data: referrerData.map(item => item.count),
+                backgroundColor: gradientColors,
+                borderWidth: 2,
+                borderColor: '#fff'
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return referrerLabels[tooltipItem.dataIndex] + ': ' + referrerCounts[tooltipItem.dataIndex];
-                        }
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: { size: 12 },
+                        color: '#374151'
                     }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12
                 }
             }
         }
@@ -172,25 +347,31 @@
 
     // Device Chart
     new Chart(document.getElementById('deviceChart'), {
-        type: 'pie',
+        type: 'doughnut',
         data: {
-            labels: deviceLabels,
+            labels: deviceData.map(item => item.device || 'Unknown'),
             datasets: [{
-                label: 'Device',
-                data: deviceCounts,
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+                data: deviceData.map(item => item.count),
+                backgroundColor: gradientColors,
+                borderWidth: 2,
+                borderColor: '#fff'
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return deviceLabels[tooltipItem.dataIndex] + ': ' + deviceCounts[tooltipItem.dataIndex];
-                        }
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: { size: 12 },
+                        color: '#374151'
                     }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12
                 }
             }
         }
@@ -198,25 +379,31 @@
 
     // Browser Chart
     new Chart(document.getElementById('browserChart'), {
-        type: 'pie',
+        type: 'doughnut',
         data: {
-            labels: browserLabels,
+            labels: browserData.map(item => item.browser || 'Unknown'),
             datasets: [{
-                label: 'Browser',
-                data: browserCounts,
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+                data: browserData.map(item => item.count),
+                backgroundColor: gradientColors,
+                borderWidth: 2,
+                borderColor: '#fff'
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return browserLabels[tooltipItem.dataIndex] + ': ' + browserCounts[tooltipItem.dataIndex];
-                        }
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: { size: 12 },
+                        color: '#374151'
                     }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12
                 }
             }
         }

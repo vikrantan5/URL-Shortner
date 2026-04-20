@@ -16,7 +16,8 @@ from .views import (
 )
 from chat import views
 
-#urls for user, shorten link analytics,campaign, chat, detection
+# URLs for user, shorten link analytics
+# Note: These are now prefixed with /s/ in main urls.py
 urlpatterns = [
     path('signup/', signup_view, name='signup'),
     path('login/', login_view, name='login'),
@@ -27,14 +28,10 @@ urlpatterns = [
     path('customize/', customize_short_url_view, name='customize_short_url'),
     path('generate_qr_code/', generate_qr_code_view, name='generate_qr_code'),
     path('settings/', settings_view, name='settings'),
-    path('chat/', include('chat.urls')),
     path('links/', user_links, name='user_links'),
-    path('advertisements/', include('advertisements.urls')),
-    path('business_card/', include('business_card.urls')),
-    path('detect/', include('detect.urls')),
-    path('landing/', include('landing_pages.urls')),
+    
+    # Short URL redirect (now accessed via /s/<short_code>/)
     path('<short_code>/', redirect_view, name='redirect_view'),
     path('details/<short_code>/', url_details_view, name='url_details_view'),
     path('<str:short_code>/delete/', delete_short_url, name='delete_short_url'),
-
 ]

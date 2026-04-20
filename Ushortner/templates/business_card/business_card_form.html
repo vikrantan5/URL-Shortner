@@ -1,72 +1,37 @@
-<!-- business_card_form.html -->
-
 {% extends "basehome/base.html" %}
-
-{% block content %}
-
+{% block title %}Update Business Card — NeuraSafe{% endblock %}
 {% load static %}
+{% block content %}
 <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
-<body class="overflow-hidden">
-<div class="bg-gray-100 p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen"> 
-    <div class="w-full h-screen bg-gray-100">
 
-    <div class="mb-8 container mx-auto bg-white p-8 rounded-lg ">
-        <h1 class="text-3xl font-bold mb-4">Update Business Card</h1>
-        <form method="post" class="space-y-4">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Update</button>
-        </form>
+<div class="ns-app-content" data-testid="update-card-root">
+  <div class="animate-fade-in-up" style="max-width: 780px; margin: 0 auto;">
+    <div style="margin-bottom: 24px;">
+      <p style="color: var(--text-muted); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin: 0 0 8px;">Edit Card</p>
+      <h1 style="font-size: clamp(26px, 4vw, 38px); font-weight: 800; letter-spacing: -0.02em; margin: 0;">
+        Update <span class="text-gradient-cyan">Business Card</span>
+      </h1>
     </div>
-<br>
-<br>
-</div>
-</div>
-
-
-<div id="loading-spinner" class="hidden fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
-    <div class="loader"></div>
+    <form method="post" enctype="multipart/form-data" class="ns-card animate-fade-in-up delay-1" style="padding: 28px; display: flex; flex-direction: column; gap: 14px;" data-testid="update-card-form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px;">
+        <button type="submit" class="ns-btn-primary" data-testid="update-card-submit">Update Card</button>
+        <a href="{% url 'business_card_list' %}" class="ns-btn-ghost">← Back to Cards</a>
+      </div>
+    </form>
   </div>
-  
-  <style>
-    .loader {
-      border: 8px solid #f3f3f3;
-      border-radius: 50%;
-      border-top: 8px solid #3498db;
-      width: 60px;
-      height: 60px;
-      -webkit-animation: spin 2s linear infinite;
-      animation: spin 2s linear infinite;
-      color: #3498db;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  
-    @-webkit-keyframes spin {
-      0% { -webkit-transform: rotate(0deg); }
-      100% { -webkit-transform: rotate(360deg); }
-    }
-  
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  
-   
-  </style>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const form = document.querySelector('form');
-      const loadingSpinner = document.getElementById('loading-spinner');
-  
-      form.addEventListener('submit', function () {
-        loadingSpinner.classList.remove('hidden');
-      });
-    });
-  </script>
-  
-</body>
+</div>
+
+<div id="loading-spinner" class="hidden fixed inset-0" style="background: rgba(2,6,23,0.75); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center;">
+  <div class="loader-modern"></div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+    const sp = document.getElementById('loading-spinner');
+    if (form && sp) form.addEventListener('submit', () => { sp.classList.remove('hidden'); sp.style.display = 'flex'; });
+  });
+</script>
 {% endblock %}

@@ -1,106 +1,67 @@
 {% extends 'basehome/base.html' %}
-{% block title %}Customize {% endblock %}
-
-{% block content %}
-
+{% block title %}Customize Short URL — NeuraSafe{% endblock %}
 {% load static %}
+{% block content %}
 <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
-<body class="overflow-hidden">
-<div class="bg-gray-100 p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen">
-  <div class="w-full h-screen bg-gray-100">
-  <div class="p-4  mx-auto p-8 mt-10  rounded-lg">
-    <h1 class="text-2xl font-bold mb-6 text-center">Customize your Short URL</h1>
-    <form method="post" class="space-y-4">
+
+<div class="ns-app-content" data-testid="customize-root">
+  <div class="animate-fade-in-up" style="max-width: 820px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 28px;">
+      <p style="color: var(--text-muted); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-bottom: 10px;">Branded Links</p>
+      <h1 style="font-size: clamp(28px, 4.5vw, 44px); font-weight: 800; letter-spacing: -0.02em; margin: 0;">
+        Customize your <span class="text-gradient-cyan">Short URL</span>
+      </h1>
+      <p style="color: var(--text-secondary); margin-top: 10px;">Pick your own alias, expire date and more — make it memorable.</p>
+    </div>
+
+    <form method="post" class="ns-card animate-fade-in-up delay-1" style="padding: 28px;" data-testid="customize-form">
       {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="inline-flex items-center py-2.5 px-6 ms-3 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-        Create Custom Short URL
-      </button>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        {{ form.as_p }}
+      </div>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px;">
+        <button type="submit" class="ns-btn-primary" data-testid="create-custom-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+          Create Custom Short URL
+        </button>
+        <a href="{% url 'userdashboard' %}" class="ns-btn-ghost" data-testid="back-to-dashboard">← Back to Dashboard</a>
+      </div>
     </form>
 
-      {% if short_url and qr_code %}
-    <div class="flex mt-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 p-6">
-      <div class="flex-shrink-0">
-          <h2 class="text-xl font-bold mb-2">QR Code</h2>
-              <img id="qrCodeImage" src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="w-40 h-40 object-cover rounded-md">
+    {% if short_url and qr_code %}
+    <div class="ns-card animate-fade-in-up delay-2" style="padding: 28px; margin-top: 24px; display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start;" data-testid="short-url-result">
+      <div style="flex-shrink: 0;">
+        <p style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin: 0 0 10px;">QR Code</p>
+        <img id="qrCodeImage" src="data:image/png;base64,{{ qr_code }}" alt="QR Code" style="width: 180px; height: 180px; border-radius: 14px; padding: 8px; background: #fff;">
       </div>
-      <div class="flex-grow ml-6">
-          <h2 class="text-xl font-bold mb-2">Your Customized Short URL</h2>
-          <p class="mb-4">Short URL: 
-              <a href="http://127.0.0.1:8000/{{ short_url.short_code }}" class="text-blue-500 hover:underline">
-                  http://127.0.0.1:8000/{{ short_url.short_code }}
-              </a>
-              <button onclick="copyToClipboard('http://127.0.0.1:8000/{{ short_url.short_code }}')" class="text-blue-700 hover:underline ml-2">
-                  <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-6 5h6m-6 4h6M10 3v4h4V3h-4Z"/>
-                  </svg>
-              </button>
-          </p>
-          <button onclick="downloadQRCode()" class="mt-16 inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-            Download QR Code
-            <svg class="w-6 h-6 text-white ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M13 11.15V4a1 1 0 1 0-2 0v7.15L8.78 8.374a1 1 0 1 0-1.56 1.25l4 5a1 1 0 0 0 1.56 0l4-5a1 1 0 1 0-1.56-1.25L13 11.15Z" clip-rule="evenodd"/>
-                <path fill-rule="evenodd" d="M9.657 15.874 7.358 13H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2h-2.358l-2.3 2.874a3 3 0 0 1-4.685 0ZM17 16a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H17Z" clip-rule="evenodd"/>
-            </svg>
-        </button>
+      <div style="flex: 1; min-width: 260px;">
+        <p style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin: 0 0 6px;">Your Customized Short URL</p>
+        <a href="http://127.0.0.1:8000/{{ short_url.short_code }}" class="text-gradient-cyan" style="font-size: 20px; font-weight: 700; text-decoration: none; display: inline-block; margin-bottom: 6px; word-break: break-all;" data-testid="custom-short-url">http://127.0.0.1:8000/{{ short_url.short_code }}</a>
+        <p style="color: var(--text-muted); font-size: 13px; margin: 0 0 18px;">Share this branded link anywhere — it will track every click.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <button onclick="downloadQRCode()" type="button" class="ns-btn-primary" style="padding: 10px 18px; font-size: 14px;" data-testid="download-qr-btn">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+            Download QR
+          </button>
+          <button onclick="copyToClipboard('http://127.0.0.1:8000/{{ short_url.short_code }}')" type="button" class="ns-btn-ghost" data-testid="copy-link-btn">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-6 5h6m-6 4h6M10 3v4h4V3h-4Z"/></svg>
+            Copy Link
+          </button>
+        </div>
       </div>
-  </div>
-  
+    </div>
     {% endif %}
-    <br>
-    <a href="{% url 'userdashboard' %}" class="text-blue-500 hover:underline">
-      Back to Dashboard
-    </a>
   </div>
-  <br>
-  <br>
-</div>
 </div>
 
-
-<div id="loading-spinner" class="hidden fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
-  <div class="loader"></div>
+<div id="loading-spinner" class="hidden fixed inset-0" style="background: rgba(2,6,23,0.75); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center;">
+  <div class="loader-modern"></div>
 </div>
 
-<style>
-  .loader {
-    border: 8px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 8px solid #3498db;
-    width: 60px;
-    height: 60px;
-    -webkit-animation: spin 2s linear infinite;
-    animation: spin 2s linear infinite;
-    color: #3498db;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  @-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
- 
-</style>
-
-</body>
-<<script>
-   // QR Code Download Function
+<script>
   function downloadQRCode() {
     const qrImage = document.getElementById('qrCodeImage');
-    if (!qrImage) {
-      alert('QR Code not found!');
-      return;
-    }
-
+    if (!qrImage) return;
     const link = document.createElement('a');
     link.href = qrImage.src;
     link.download = 'qr-code-{{ short_url.short_code|default:"download" }}.png';
@@ -108,22 +69,13 @@
     link.click();
     document.body.removeChild(link);
   }
-
-  // Copy to Clipboard Function
   function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(function() {
-      alert('Link copied to clipboard!');
-    }, function() {
-      alert('Failed to copy link');
-    });
+    navigator.clipboard.writeText(text).then(() => alert('Link copied!'));
   }
   document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('form');
-    const loadingSpinner = document.getElementById('loading-spinner');
-
-    form.addEventListener('submit', function () {
-      loadingSpinner.classList.remove('hidden');
-    });
+    const sp = document.getElementById('loading-spinner');
+    if (form && sp) form.addEventListener('submit', () => { sp.classList.remove('hidden'); sp.style.display = 'flex'; });
   });
 </script>
 {% endblock %}

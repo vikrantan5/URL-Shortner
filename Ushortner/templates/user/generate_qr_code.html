@@ -1,88 +1,60 @@
 {% extends 'basehome/base.html' %}
-{% block title %}generate_qr_code {% endblock %}
-
-{% block content %}
-
+{% block title %}Generate QR Code — NeuraSafe{% endblock %}
 {% load static %}
+{% block content %}
 <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
 
-<div class="bg-gray-100 p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen">
-  <div class="w-full h-screen bg-gray-100">
-  <h1 class="text-center text-3xl font-bold text-gray-900 mb-8">Generate QR Code for URL</h1>
+<div class="ns-app-content" data-testid="qr-root">
+  <div class="animate-fade-in-up" style="max-width: 820px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 28px;">
+      <p style="color: var(--text-muted); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-bottom: 10px;">Instant Sharing</p>
+      <h1 style="font-size: clamp(28px, 4.5vw, 44px); font-weight: 800; letter-spacing: -0.02em; margin: 0;">
+        Generate <span class="text-gradient-cyan">QR Code</span> for URL
+      </h1>
+      <p style="color: var(--text-secondary); margin-top: 10px;">Paste any URL and get a scannable QR — ready to print or share.</p>
+    </div>
 
-<form method="post" class="space-y-6 ml-10">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class=" py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-    Generate QR Code
-  </button>
-</form>
+    <form method="post" class="ns-card animate-fade-in-up delay-1" style="padding: 28px;" data-testid="qr-form">
+      {% csrf_token %}
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        {{ form.as_p }}
+      </div>
+      <div style="margin-top: 20px;">
+        <button type="submit" class="ns-btn-primary" data-testid="generate-qr-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+          Generate QR Code
+        </button>
+      </div>
+    </form>
 
-{% if qr_code %}
-<div class="ml-10 mb-8">
-  <br>
-  <img src="data:image/jpeg;base64,{{ qr_code }}" alt="QR Code" class="border-gray-300 p-2 rounded-lg shadow-md">
-  <a href="data:image/jpeg;base64,{{ qr_code|safe }}" download="qr_code.jpg">
-    <br>
-    <button class="inline-flex px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-        Download QR Code
-        <svg class="w-6 h-6 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-          <path fill-rule="evenodd" d="M13 11.15V4a1 1 0 1 0-2 0v7.15L8.78 8.374a1 1 0 1 0-1.56 1.25l4 5a1 1 0 0 0 1.56 0l4-5a1 1 0 1 0-1.56-1.25L13 11.15Z" clip-rule="evenodd"/>
-          <path fill-rule="evenodd" d="M9.657 15.874 7.358 13H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2h-2.358l-2.3 2.874a3 3 0 0 1-4.685 0ZM17 16a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H17Z" clip-rule="evenodd"/>
-        </svg>
-                         
-    </button>
-</a>
+    {% if qr_code %}
+    <div class="ns-card animate-fade-in-up delay-2" style="padding: 28px; margin-top: 24px; display: flex; gap: 24px; flex-wrap: wrap; align-items: center; justify-content: center;" data-testid="qr-result">
+      <div style="flex-shrink: 0;">
+        <img src="data:image/jpeg;base64,{{ qr_code }}" alt="QR Code" style="width: 220px; height: 220px; border-radius: 16px; padding: 10px; background: #fff;">
+      </div>
+      <div style="flex: 1; min-width: 260px;">
+        <p style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin: 0 0 6px;">QR Ready</p>
+        <h3 style="font-size: 24px; font-weight: 800; color: #fff; margin: 0 0 8px;">Scan me from any device</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin: 0 0 18px;">Download the QR image and embed it in your print material, posters or social media.</p>
+        <a href="data:image/jpeg;base64,{{ qr_code|safe }}" download="qr_code.jpg" class="ns-btn-primary" data-testid="download-qr-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+          Download QR Code
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
 </div>
 
+<div id="loading-spinner" class="hidden fixed inset-0" style="background: rgba(2,6,23,0.75); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center;">
+  <div class="loader-modern"></div>
 </div>
-</div>
-{% endif %}
-
-
-<div id="loading-spinner" class="hidden fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
-  <div class="loader"></div>
-</div>
-
-<style>
-  .loader {
-    border: 8px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 8px solid #3498db;
-    width: 60px;
-    height: 60px;
-    -webkit-animation: spin 2s linear infinite;
-    animation: spin 2s linear infinite;
-    color: #3498db;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-  @-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-  }
-
- 
- 
-</style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('form');
-    const loadingSpinner = document.getElementById('loading-spinner');
-
-    form.addEventListener('submit', function () {
-      loadingSpinner.classList.remove('hidden');
-    });
+    const sp = document.getElementById('loading-spinner');
+    if (form && sp) form.addEventListener('submit', () => { sp.classList.remove('hidden'); sp.style.display = 'flex'; });
   });
 </script>
-
 {% endblock %}

@@ -1,127 +1,82 @@
-
-
 {% extends "basehome/base.html" %}
-{% block title %}Business Card {% endblock %}
-{% block content %}
-
+{% block title %}Create Business Card — NeuraSafe{% endblock %}
 {% load static %}
+{% block content %}
 <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
-<body class="overflow-hidden">
-<div class="bg-gray-100 p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen"> 
-    <div class="w-full h-screen bg-gray-100">
-    <div class="container mx-auto p-4">
-        <h1 class="text-3xl font-bold mb-4">Create Business Card</h1>
-        <form method="post" enctype="multipart/form-data" class="bg-gray p-6 rounded-lg">
-            {% csrf_token %}
-            <div class="mb-4">
-                {{ form.template.label_tag }}<br>
-                {{ form.template }}
-            </div>
-            <div class="mb-4">
-                {{ form.custom_template_image.label_tag }}<br>
-                {{ form.custom_template_image }}
-            </div>
-            <div class="mb-4">
-                {{ form.name.label_tag }}<br>
-                {{ form.name }}
-            </div>
-            <div class="mb-4">
-                {{ form.company_name.label_tag }}<br>
-                {{ form.company_name }}
-            </div>
-            <div class="mb-4">
-                {{ form.email.label_tag }}<br>
-                {{ form.email }}
-            </div>
-            <div class="mb-4">
-                {{ form.phone_number.label_tag }}<br>
-                {{ form.phone_number }}
-            </div>
-            <div class="mb-4">
-                {{ form.linkedin.label_tag }}<br>
-                {{ form.linkedin }}
-            </div>
-            <div class="mb-4">
-                {{ form.twitter.label_tag }}<br>
-                {{ form.twitter }}
-            </div>
-            <div class="mb-4">
-                {{ form.facebook.label_tag }}<br>
-                {{ form.facebook }}
-            </div>
-            <div class="mb-4">
-                {{ form.instagram.label_tag }}<br>
-                {{ form.instagram }}
-            </div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Create Business Card</button>
-        </form>
-        <div class="mt-8">
-            <h2 class="text-2xl font-bold mb-2">Available Templates</h2>
-            <div class="grid grid-cols-3 gap-4">
-                {% for template in templates %}
-                    <div class="border rounded-lg overflow-hidden shadow-lg">
-                        <div class="h-48 overflow-hidden">
-                            <img src="{{ template.image.url }}" alt="{{ template.name }}" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <p class="text-center font-bold">{{ template.name }}</p>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    <br>
-    <br>
-    <br>
-</div>
-</div>
 
-
-
-<div id="loading-spinner" class="hidden fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
-    <div class="loader"></div>
+<div class="ns-app-content" data-testid="create-card-root">
+  <div class="animate-fade-in-up" style="margin-bottom: 28px;">
+    <p style="color: var(--text-muted); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin: 0 0 8px;">Digital Identity</p>
+    <h1 style="font-size: clamp(28px, 4.5vw, 44px); font-weight: 800; letter-spacing: -0.02em; margin: 0;">
+      Create <span class="text-gradient-cyan">Business Card</span>
+    </h1>
+    <p style="color: var(--text-secondary); margin-top: 10px;">Choose a template, fill in your details, and share your card anywhere.</p>
   </div>
-  
-  <style>
-    .loader {
-      border: 8px solid #f3f3f3;
-      border-radius: 50%;
-      border-top: 8px solid #3498db;
-      width: 60px;
-      height: 60px;
-      -webkit-animation: spin 2s linear infinite;
-      animation: spin 2s linear infinite;
-      color: #3498db;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  
-    @-webkit-keyframes spin {
-      0% { -webkit-transform: rotate(0deg); }
-      100% { -webkit-transform: rotate(360deg); }
-    }
-  
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  
-   
-  </style>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const form = document.querySelector('form');
-      const loadingSpinner = document.getElementById('loading-spinner');
-  
-      form.addEventListener('submit', function () {
-        loadingSpinner.classList.remove('hidden');
-      });
-    });
-  </script>
-  
-</body>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 24px;" class="ns-responsive-split">
+    <style>@media (max-width: 960px) { .ns-responsive-split { grid-template-columns: 1fr !important; } }</style>
+
+    <!-- Form -->
+    <div class="ns-card animate-fade-in-up delay-1" style="padding: 28px;" data-testid="card-form-wrap">
+      <h2 style="font-size: 20px; font-weight: 700; margin: 0 0 20px;">Card Details</h2>
+      <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 16px;">
+        {% csrf_token %}
+        <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Template</label>{{ form.template }}</div>
+        <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Custom Template Image</label>{{ form.custom_template_image }}</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Full Name</label>{{ form.name }}</div>
+          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Company</label>{{ form.company_name }}</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Email</label>{{ form.email }}</div>
+          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Phone</label>{{ form.phone_number }}</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">LinkedIn</label>{{ form.linkedin }}</div>
+          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Twitter</label>{{ form.twitter }}</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Facebook</label>{{ form.facebook }}</div>
+          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Instagram</label>{{ form.instagram }}</div>
+        </div>
+        <div style="margin-top: 8px;">
+          <button type="submit" class="ns-btn-primary" data-testid="create-card-submit">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Create Business Card
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Templates Gallery -->
+    <div class="ns-card animate-fade-in-up delay-2" style="padding: 24px;">
+      <h2 style="font-size: 20px; font-weight: 700; margin: 0 0 6px;">Available Templates</h2>
+      <p style="color: var(--text-muted); font-size: 13px; margin: 0 0 18px;">Pick a starting design or upload your own above.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        {% for template in templates %}
+        <div class="ns-card" style="padding: 0; overflow: hidden; border-radius: var(--radius-md);">
+          <div style="height: 110px; overflow: hidden;">
+            <img src="{{ template.image.url }}" alt="{{ template.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <p style="text-align: center; font-weight: 600; color: var(--text-soft); font-size: 13px; padding: 10px; margin: 0;">{{ template.name }}</p>
+        </div>
+        {% empty %}
+        <p style="color: var(--text-muted); font-size: 13px; grid-column: 1 / -1;">No templates available.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="loading-spinner" class="hidden fixed inset-0" style="background: rgba(2,6,23,0.75); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center;">
+  <div class="loader-modern"></div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+    const sp = document.getElementById('loading-spinner');
+    if (form && sp) form.addEventListener('submit', () => { sp.classList.remove('hidden'); sp.style.display = 'flex'; });
+  });
+</script>
 {% endblock %}

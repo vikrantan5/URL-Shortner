@@ -4,28 +4,45 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .feature import FeatureExtraction
 
-file = open("detect/model.pkl", "rb")
-gbc = pickle.load(file)
-file.close()
+with open("detect/model.pkl", "rb") as f:
+    model = pickle.load(f)
 
 @api_view(['POST'])
 def predict(request):
-    url = request.data.get('url', '')
-    print(request.data)
+    url = request.data.get('url', '').strip()
+
     if not url:
         return Response({'error': 'URL is required'}, status=400)
 
-    obj = FeatureExtraction(url)
-    x = np.array(obj.getFeaturesList()).reshape(1, 30)
+    try:
+        features = FeatureExtraction(url).getFeaturesList()
 
-    y_pred = gbc.predict(x)[0]
-    y_pro_phishing = gbc.predict_proba(x)[0, 0]
-    y_pro_non_phishing = gbc.predict_proba(x)[0, 1]
+        x = np.array(features).reshape(1, -1)
 
-    response_data = {
-        'url': url,
-        'prediction': y_pred,
-        'probability_phishing': y_pro_phishing,
-        'probability_non_phishing': y_pro_non_phishing
-    }
-    return Response(response_data)
+        prediction = int(model.predict(x)[0])
+
+        probs = model.predict_proba(x)[0]
+
+        phish_prob = float(probs[0])
+        legit_prob = float(probs[1])
+
+# convert to percentage
+        phish_percent = phish_prob * 100
+        legit_percent = legit_prob * 100
+
+# 🔥 FINAL LOGIC
+        if phish_percent >= 70:
+            prediction = 0  # suspicious
+            final_probability = phish_percent
+        else:
+            prediction = 1  # legitimate
+            final_probability = 100.0   # force 100%
+
+        return Response({
+            "prediction": prediction,
+            "phishing_probability": float(probs[0]),
+            "legitimate_probability": float(probs[1])
+        })
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)

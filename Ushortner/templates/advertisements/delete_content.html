@@ -1,39 +1,66 @@
 {% extends 'basehome/base.html' %}
-{% block title %}Delete Content{% endblock %}
 {% load custom_tags %}
-{% block content %}
 {% load static %}
+{% block title %}Delete Content — NeuraSafe{% endblock %}
+{% block content %}
 <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
 
-<div class="bg-gray-100 p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen"> 
-    <div class="w-full h-screen bg-gray-100">
-    <h1 class="text-center text-4xl font-bold text-gray-900 mb-8">Delete Content</h1>
-    <div class="max-w-lg mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden dark:bg-gray-800 dark:border-gray-700 p-6">
-        <p class="text-center text-lg text-gray-700 dark:text-gray-400 mb-6">Are you sure you want to delete this content?</p>
-        
-        <div class="text-center mb-6">
-            {% if content|model_name == 'campaign' %}
-                <div class="h-48 overflow-hidden mb-4">
-                    <img class="w-full h-full object-cover" src="{{ content.image.url }}" alt="Campaign Image">
-                </div>
-                <p class="text-gray-700 dark:text-gray-400">{{ content.description }}</p>
-            {% elif content|model_name == 'reel' %}
-                <video class="w-full h-48 object-cover mb-4" controls>
-                    <source src="{{ content.video.url }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <p class="text-gray-700 dark:text-gray-400">{{ content.description }}</p>
-            {% endif %}
+<div class="ns-app-content" data-testid="delete-content-root">
+  <div style="min-height: calc(100vh - var(--nav-h, 64px)); display: flex; align-items: center; justify-content: center; padding: 24px;">
+    <div class="animate-fade-in-up" style="width: 100%; max-width: 560px;">
+      <div class="ns-card" style="padding: 36px 32px; border-radius: var(--radius-lg); box-sizing: border-box;">
+        <!-- Icon -->
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div style="width: 84px; height: 84px; margin: 0 auto 16px; border-radius: 22px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(239,68,68,0.22), rgba(236,72,153,0.15)); border: 1px solid rgba(239,68,68,0.35); box-shadow: 0 0 30px rgba(239,68,68,0.15);">
+            <svg width="34" height="34" fill="none" stroke="#fca5a5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+          </div>
+          <h1 style="font-size: clamp(22px, 3.4vw, 28px); font-weight: 800; letter-spacing: -0.01em; margin: 0 0 8px;">
+            Delete <span style="background: linear-gradient(135deg,#fca5a5,#f9a8d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Content?</span>
+          </h1>
+          <p style="color: var(--text-secondary); margin: 0; font-size: 14px;">This action cannot be undone.</p>
         </div>
-        
-        <form method="post">
-            {% csrf_token %}
-            <div class="flex justify-center space-x-4">
-                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300">Delete</button>
-                <a href="{% url 'my_content' %}" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300">Cancel</a>
+
+        <!-- Preview -->
+        <div style="margin: 18px 0 24px; border-radius: var(--radius-md); overflow: hidden; background: rgba(15,23,42,0.5); border: 1px solid var(--card-border);">
+          {% if content|model_name == 'campaign' %}
+            <div style="width: 100%; aspect-ratio: 16/9; overflow: hidden; background: rgba(0,0,0,0.3);">
+              <img src="{{ content.image.url }}" alt="Campaign Image" style="width: 100%; height: 100%; object-fit: cover; display: block;">
             </div>
+          {% elif content|model_name == 'reel' %}
+            <video controls style="width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #000;">
+              <source src="{{ content.video.url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          {% endif %}
+          {% if content.description %}
+            <p style="padding: 14px 18px; margin: 0; color: var(--text-secondary); font-size: 14px; word-wrap: break-word; overflow-wrap: break-word;">
+              {{ content.description|truncatechars:220 }}
+            </p>
+          {% endif %}
+        </div>
+
+        <!-- Actions -->
+        <form method="post" data-testid="delete-content-form">
+          {% csrf_token %}
+          <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <a href="{% url 'my_content' %}" class="ns-btn-ghost" data-testid="cancel-delete-content" style="padding: 11px 24px;">Cancel</a>
+            <button type="submit" data-testid="confirm-delete-content"
+                    style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: var(--radius-md); border: none; cursor: pointer; font-weight: 600; font-size: 15px; color: #fff; background: linear-gradient(135deg,#ef4444 0%,#ec4899 100%); box-shadow: 0 6px 20px rgba(239,68,68,0.35); transition: all 0.3s ease;"
+                    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px rgba(239,68,68,0.5)';"
+                    onmouseout="this.style.transform='';this.style.boxShadow='0 6px 20px rgba(239,68,68,0.35)';">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M10 7V4a2 2 0 012-2h0a2 2 0 012 2v3"/>
+              </svg>
+              Delete
+            </button>
+          </div>
         </form>
+      </div>
     </div>
-</div>
+  </div>
 </div>
 {% endblock %}

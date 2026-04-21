@@ -331,8 +331,8 @@ a { color: inherit; }
 }
 
 .ns-app-content .bg-white,
-.ns-app-content .dark\:bg-gray-800,
-.ns-app-content .dark\:bg-gray-700 {
+.ns-app-content .dark:bg-gray-800,
+.ns-app-content .dark:bg-gray-700 {
   background: var(--card-bg) !important;
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -365,33 +365,50 @@ a { color: inherit; }
 .ns-app-content .shadow-lg { box-shadow: var(--shadow-md) !important; }
 
 /* Inputs inside app */
-.ns-app-content input[type=\"text\"],
-.ns-app-content input[type=\"email\"],
-.ns-app-content input[type=\"password\"],
-.ns-app-content input[type=\"url\"],
-.ns-app-content input[type=\"search\"],
-.ns-app-content input[type=\"date\"],
-.ns-app-content input[type=\"number\"],
+.ns-app-content input[type="text"],
+.ns-app-content input[type="email"],
+.ns-app-content input[type="password"],
+.ns-app-content input[type="url"],
+.ns-app-content input[type="search"],
+.ns-app-content input[type="date"],
+.ns-app-content input[type="number"],
+.ns-app-content input[type="tel"],
+.ns-app-content input[type="color"],
+.ns-app-content input[type="file"],
+.ns-app-content input:not([type]),
 .ns-app-content select,
 .ns-app-content textarea {
   background: rgba(15, 23, 42, 0.6) !important;
-  border: 1px solid rgba(255,255,255,0.1) !important;
-  color: var(--text-primary) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
   border-radius: var(--radius-md) !important;
   padding: 11px 14px !important;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   transition: all 0.25s ease;
   color-scheme: dark;
+}
+.ns-app-content input[type="color"] {
+  padding: 4px !important;
+  height: 44px;
+}
+.ns-app-content input[type="file"] {
+  padding: 8px 12px !important;
 }
 .ns-app-content input:focus,
 .ns-app-content select:focus,
 .ns-app-content textarea:focus {
   outline: none !important;
   border-color: var(--secondary) !important;
-  box-shadow: 0 0 0 3px rgba(6,182,212,0.18) !important;
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.18) !important;
   background: rgba(15, 23, 42, 0.8) !important;
 }
 .ns-app-content input::placeholder,
-.ns-app-content textarea::placeholder { color: var(--text-muted); }
+.ns-app-content textarea::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1;
+}
 
 /* Tables inside app */
 .ns-app-content table {
@@ -418,8 +435,8 @@ a { color: inherit; }
   box-shadow: 0 6px 18px rgba(79,70,229,0.35);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.ns-app-content .hover\:bg-blue-800:hover,
-.ns-app-content .hover\:bg-blue-700:hover,
+.ns-app-content .hover:bg-blue-800:hover,
+.ns-app-content .hover:bg-blue-700:hover,
 .ns-app-content .bg-blue-500:hover,
 .ns-app-content .bg-blue-600:hover,
 .ns-app-content .bg-blue-700:hover {
@@ -621,14 +638,14 @@ a { color: inherit; }
 
 /* Dropdown menus inside app (existing flowbite dropdowns) */
 .ns-app-content .bg-white.border.shadow-lg,
-.ns-app-content .dark\:bg-gray-700,
-.ns-app-content .dark\:bg-gray-800 {
+.ns-app-content .dark:bg-gray-700,
+.ns-app-content .dark:bg-gray-800 {
   background: rgba(15,23,42,0.95) !important;
   border-color: rgba(255,255,255,0.1) !important;
 }
-.ns-app-content .hover\:bg-gray-100:hover,
-.ns-app-content .dark\:hover\:bg-gray-600:hover,
-.ns-app-content .dark\:hover\:bg-gray-700:hover {
+.ns-app-content .hover:bg-gray-100:hover,
+.ns-app-content .dark:hover:bg-gray-600:hover,
+.ns-app-content .dark:hover:bg-gray-700:hover {
   background: rgba(99,102,241,0.15) !important;
   color: #fff !important;
 }

@@ -17,27 +17,80 @@
     <style>@media (max-width: 960px) { .ns-responsive-split { grid-template-columns: 1fr !important; } }</style>
 
     <!-- Form -->
-    <div class="ns-card animate-fade-in-up delay-1" style="padding: 28px;" data-testid="card-form-wrap">
+    <div class="ns-card animate-fade-in-up delay-1" style="padding: 28px; min-width: 0;" data-testid="card-form-wrap">
       <h2 style="font-size: 20px; font-weight: 700; margin: 0 0 20px;">Card Details</h2>
-      <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 16px;">
+
+      {% if form.non_field_errors %}
+        <div style="padding: 12px 16px; border-radius: 12px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35); color: #fca5a5; margin-bottom: 16px; font-size: 14px;" data-testid="card-form-non-field-errors">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+      {% if form.errors and not form.non_field_errors %}
+        <div style="padding: 12px 16px; border-radius: 12px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35); color: #fca5a5; margin-bottom: 16px; font-size: 14px;" data-testid="card-form-errors-summary">
+          Please correct the errors below and try again.
+        </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'create_business_card' %}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 16px;" data-testid="create-card-form">
         {% csrf_token %}
-        <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Template</label>{{ form.template }}</div>
-        <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Custom Template Image</label>{{ form.custom_template_image }}</div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Full Name</label>{{ form.name }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Company</label>{{ form.company_name }}</div>
+        <div>
+          <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Template</label>
+          {{ form.template }}
+          {% if form.template.errors %}<p style="color:#fca5a5; font-size:12px; margin-top:6px;" data-testid="err-template">{{ form.template.errors|striptags }}</p>{% endif %}
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Email</label>{{ form.email }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Phone</label>{{ form.phone_number }}</div>
+        <div>
+          <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Custom Template Image</label>
+          {{ form.custom_template_image }}
+          {% if form.custom_template_image.errors %}<p style="color:#fca5a5; font-size:12px; margin-top:6px;" data-testid="err-custom-template">{{ form.custom_template_image.errors|striptags }}</p>{% endif %}
+          <p style="color: var(--text-muted); font-size: 12px; margin-top: 6px;">Pick a template above <em>or</em> upload your own image here.</p>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">LinkedIn</label>{{ form.linkedin }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Twitter</label>{{ form.twitter }}</div>
+        <div class="ns-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div style="min-width:0;">
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Full Name</label>
+            {{ form.name }}
+            {% if form.name.errors %}<p style="color:#fca5a5; font-size:12px; margin-top:6px;">{{ form.name.errors|striptags }}</p>{% endif %}
+          </div>
+          <div style="min-width:0;">
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Company</label>
+            {{ form.company_name }}
+            {% if form.company_name.errors %}<p style="color:#fca5a5; font-size:12px; margin-top:6px;">{{ form.company_name.errors|striptags }}</p>{% endif %}
+          </div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Facebook</label>{{ form.facebook }}</div>
-          <div><label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Instagram</label>{{ form.instagram }}</div>
+        <div class="ns-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div style="min-width:0;">
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}<p style="color:#fca5a5; font-size:12px; margin-top:6px;">{{ form.email.errors|striptags }}</p>{% endif %}
+          </div>
+          <div style="min-width:0;">
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Phone</label>
+            {{ form.phone_number }}
+            {% if form.phone_number.errors %}<p style="color:#fca5a5; font-size:12px; margin-top:6px;">{{ form.phone_number.errors|striptags }}</p>{% endif %}
+          </div>
+        </div>
+        <div class="ns-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div style="min-width:0;">
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">LinkedIn</label>
+            {{ form.linkedin }}
+          </div>
+          <div style="min-width:0;">
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Twitter</label>
+            {{ form.twitter }}
+          </div>
+        </div>
+        <div class="ns-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div style="min-width:0;">
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Facebook</label>
+            {{ form.facebook }}
+          </div>
+          <div style="min-width:0;">
+            <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Instagram</label>
+            {{ form.instagram }}
+          </div>
+        </div>
+        <div>
+          <label style="color: var(--text-soft); font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Logo (optional)</label>
+          {{ form.logo }}
         </div>
         <div style="margin-top: 8px;">
           <button type="submit" class="ns-btn-primary" data-testid="create-card-submit">
@@ -47,7 +100,6 @@
         </div>
       </form>
     </div>
-
     <!-- Templates Gallery -->
     <div class="ns-card animate-fade-in-up delay-2" style="padding: 24px;">
       <h2 style="font-size: 20px; font-weight: 700; margin: 0 0 6px;">Available Templates</h2>

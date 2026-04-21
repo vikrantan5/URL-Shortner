@@ -1,19 +1,37 @@
 {% extends "basehome/base.html" %}
-{% block content %}
-
 {% load static %}
+{% block title %}Delete Advertisement Page — NeuraSafe{% endblock %}
+{% block content %}
 <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
-<div class="bg-gray-100 mx-auto p-4 sm:ml-64 mt-12 ml-4 overflow-y-auto max-h-screen"> 
-    <div class="w-full h-screen bg-gray-100">
-<div class="bg-white container mx-auto mt-8 p-4 text-center">
-    <h1 class="text-2xl font-bold mb-4">Delete Landing Page</h1>
-    <p>Are you sure you want to delete the landing page "{{ landing_page.title }}"?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded mt-4 mb-8">Delete</button>
-        <a href="{% url 'user_landing_pages' %}" class="bg-gray-500 text-white px-4 py-2 rounded mt-4 mb-8">Cancel</a>
-    </form>
-</div>
-</div>
+
+<div class="ns-app-content" data-testid="delete-landing-root">
+  <div style="min-height: calc(100vh - var(--nav-h, 64px)); display: flex; align-items: center; justify-content: center; padding: 24px;">
+    <div class="animate-fade-in-up" style="width: 100%; max-width: 520px;">
+      <div class="ns-card" style="padding: 36px 32px; border-radius: var(--radius-lg); box-sizing: border-box;">
+        <div style="text-align:center; margin-bottom: 18px;">
+          <div style="width: 84px; height: 84px; margin: 0 auto 16px; border-radius: 22px; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(239,68,68,0.22), rgba(236,72,153,0.15)); border: 1px solid rgba(239,68,68,0.35);">
+            <svg width="34" height="34" fill="none" stroke="#fca5a5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M10 7V4a2 2 0 012-2h0a2 2 0 012 2v3"/></svg>
+          </div>
+          <h1 style="font-size: clamp(22px, 3.4vw, 28px); font-weight: 800; margin: 0 0 8px;">
+            Delete <span class="text-gradient-cyan">Advertisement Page</span>
+          </h1>
+          <p style="color: var(--text-secondary); margin: 0; font-size: 14px; word-wrap: break-word; overflow-wrap: break-word;">
+            Are you sure you want to delete &ldquo;{{ landing_page.title }}&rdquo;? This action cannot be undone.
+          </p>
+        </div>
+
+        <form method="post" data-testid="delete-landing-form">
+          {% csrf_token %}
+          <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top: 6px;">
+            <a href="{% url 'user_landing_pages' %}" class="ns-btn-ghost" data-testid="cancel-delete-landing" style="padding: 11px 24px;">Cancel</a>
+            <button type="submit" data-testid="confirm-delete-landing"
+                    style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: var(--radius-md); border: none; cursor: pointer; font-weight: 600; font-size: 15px; color:#fff; background: linear-gradient(135deg,#ef4444 0%,#ec4899 100%); box-shadow: 0 6px 20px rgba(239,68,68,0.35);">
+              Delete
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

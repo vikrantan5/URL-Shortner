@@ -51,10 +51,9 @@
             </button>
             <div id="dropdownMenu{{ short_url.short_code }}" class="ns-dropdown hidden" style="top: 42px; right: 0; min-width: 210px;">
               <a href="#" onclick="shareToWhatsApp('http://127.0.0.1:8000/{{ short_url.short_code }}');return false;">Share to WhatsApp</a>
-              <a href="#" onclick="shareToFacebook('http://127.0.0.1:8000/{{ short_url.short_code }}');return false;">Share to Facebook</a>
+            
               <a href="#" onclick="shareToTwitter('http://127.0.0.1:8000/{{ short_url.short_code }}');return false;">Share to Twitter</a>
-              <a href="{% url 'content_create' 'campaign' %}?short_url=http://127.0.0.1:8000/{{ short_url.short_code }}">Advertise</a>
-              <a href="{% url 'content_create' 'reel' %}?short_url=http://127.0.0.1:8000/{{ short_url.short_code }}">VidAD</a>
+            
               {% if short_url.qr_code_data %}
               <a href="data:image/jpeg;base64,{{ short_url.qr_code_data|safe }}" download="qr_code.jpg">Download QR Code</a>
               {% endif %}

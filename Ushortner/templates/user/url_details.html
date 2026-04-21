@@ -1,172 +1,216 @@
 {% extends 'basehome/base.html' %}
-{% block title %}Details{% endblock %}
 {% load static %}
+{% block title %}URL Details | NeuraSafe{% endblock %}
+
 {% block content %}
-
-{% load static %}
 <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
-<body class="overflow-hidden">
-<div class="bg-gray-100 p-10 sm:ml-64 mt-12 overflow-y-auto max-h-screen">
-  <div class="w-full h-screen bg-gray-100">
-  <div class="relative bg-white shadow-md rounded-lg p-6 flex items-center space-x-6">
-     
-    
-    
-    
-    <!-- Delete URL Modal -->
-    <div class="absolute top-2 right-4 flex space-x-4">
-      <button onclick="copyToClipboard('http://127.0.0.1:8000/{{ short_url.short_code }}')" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700   dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
-        Copy
-         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-6 5h6m-6 4h6M10 3v4h4V3h-4Z"/>
-         </svg>
-     </button>
-    
-      <button id="dropdownMenuButton{{ short_url.short_code }}" class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
-      Share
-      <svg class="w-[18px] h-[18px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-          <path stroke="currentColor" stroke-linecap="round" stroke-width="0.8" d="M7.926 10.898 15 7.727m-7.074 5.39L15 16.29M8 12a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm12 5.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm0-11a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"/>
-        </svg>
-      </button>
-      <div id="dropdownMenu{{ short_url.short_code }}" class="hidden mr-4 absolute mt-12 w-48 py-2 bg-white border border-gray-200 rounded-lg z-50 shadow-lg dark:bg-gray-800 dark:border-gray-700">
-        <button onclick="shareToWhatsApp('http://127.0.0.1:8000/{{ short_url.short_code }}')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Share to WhatsApp</button>
-        <button onclick="shareToFacebook('http://127.0.0.1:8000/{{ short_url.short_code }}')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Share to Facebook</button>
-        <button onclick="shareToTwitter('http://127.0.0.1:8000/{{ short_url.short_code }}')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Share to Twitter</button>
-        <a href="{% url 'content_create' 'campaign' %}?short_url=http://127.0.0.1:8000/{{ short_url.short_code }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-            Advertise
-        </a>
-        <a href="{% url 'content_create' 'reel' %}?short_url=http://127.0.0.1:8000/{{ short_url.short_code }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-            VidAD
-        </a>
-        <a href="data:image/jpeg;base64,{{ short_url.qr_code_data|safe }}" download="qr_code.jpg" class="m-5 mt-4">Download QR Code</a>
 
-    </div>
-     <form action="{% url 'delete_short_url' short_url.short_code %}" method="post" >
-    {% csrf_token %}
-    
-    
-    <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" type="button">
-      Delete
-    </button> 
-     
-    <div id="popup-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-      <div class="relative p-4 w-full max-w-md max-h-full">
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-          <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
-            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-            </svg>
-            <span class="sr-only">Close modal</span>
+<div class="ns-app-content">
+  <div class="container-custom mx-auto py-8 space-y-6">
+
+    <!-- ============ Hero Card: QR + Details + Actions ============ -->
+    <div class="glass-card p-6 md:p-8 relative" data-testid="url-details-card">
+
+      <!-- Action Buttons (top right) -->
+      <div class="absolute top-4 right-4 flex flex-wrap gap-2 z-10">
+        <button type="button"
+                onclick="copyToClipboard('http://127.0.0.1:8000/{{ short_url.short_code }}')"
+                class="ns-btn-outline inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+                data-testid="copy-url-button">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-6 5h6m-6 4h6M10 3v4h4V3h-4Z"/></svg>
+          Copy
+        </button>
+
+        <div class="relative">
+          <button id="dropdownMenuButton{{ short_url.short_code }}"
+                  type="button"
+                  class="ns-btn-outline inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+                  data-testid="share-url-button">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="1.5" d="M7.926 10.898 15 7.727m-7.074 5.39L15 16.29M8 12a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm12 5.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm0-11a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"/></svg>
+            Share
           </button>
-          <div class="p-4 md:p-5 text-center">
-            <svg class="mx-auto mb-4 text-gray-400 w-12 h-9 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1-18 0Z"/>
-            </svg>
-            <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this link?</h3>
-            <button data-modal-hide="popup-modal" type="submit" class="text-white bg-red-700 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
-              Yes, I'm sure
+          <div id="dropdownMenu{{ short_url.short_code }}"
+               class="hidden absolute right-0 mt-2 w-56 py-2 rounded-xl border border-white/10 bg-slate-900/95 backdrop-blur-xl shadow-lg z-50"
+               data-testid="share-dropdown">
+            <button onclick="shareToWhatsApp('http://127.0.0.1:8000/{{ short_url.short_code }}')" class="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white">Share to WhatsApp</button>
+            <button onclick="shareToFacebook('http://127.0.0.1:8000/{{ short_url.short_code }}')" class="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white">Share to Facebook</button>
+            <button onclick="shareToTwitter('http://127.0.0.1:8000/{{ short_url.short_code }}')" class="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white">Share to Twitter</button>
+            <a href="{% url 'content_create' 'campaign' %}?short_url=http://127.0.0.1:8000/{{ short_url.short_code }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white">Advertise</a>
+            <a href="{% url 'content_create' 'reel' %}?short_url=http://127.0.0.1:8000/{{ short_url.short_code }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white">VidAD</a>
+            <a href="data:image/jpeg;base64,{{ short_url.qr_code_data|safe }}" download="qr_code.jpg" class="block px-4 py-2 text-sm text-cyan-400 hover:bg-white/5 hover:text-cyan-300">Download QR Code</a>
+          </div>
+        </div>
+
+        <button type="button"
+                data-modal-target="popup-modal"
+                data-modal-toggle="popup-modal"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-red-500/10 border border-red-500/30 text-red-300 hover:bg-red-500/20 transition-colors"
+                data-testid="delete-url-button">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V4a2 2 0 012-2h4a2 2 0 012 2v3"/></svg>
+          Delete
+        </button>
+      </div>
+
+      <!-- Delete Confirmation Modal -->
+      <div id="popup-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black/70 backdrop-blur-sm">
+        <div class="relative p-4 w-full max-w-md max-h-full mx-auto mt-24">
+          <div class="glass-card relative p-6 rounded-2xl">
+            <button type="button" class="absolute top-3 right-3 text-gray-400 hover:text-white rounded-lg w-8 h-8 inline-flex justify-center items-center" data-modal-hide="popup-modal">
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
             </button>
-            <button type="button" data-modal-toggle="popup-modal" data-modal-target="popup-modal" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-              No, cancel
-            </button>
+            <div class="text-center">
+              <div class="w-14 h-14 mx-auto rounded-full bg-red-500/20 flex items-center justify-center mb-4">
+                <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+              </div>
+              <h3 class="mb-5 text-lg font-medium text-white">Are you sure you want to delete this link?</h3>
+              <form action="{% url 'delete_short_url' short_url.short_code %}" method="post" class="flex justify-center gap-3">
+                {% csrf_token %}
+                <button data-modal-hide="popup-modal" type="submit" class="text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-5 py-2.5" data-testid="confirm-delete-button">
+                  Yes, I'm sure
+                </button>
+                <button type="button" data-modal-hide="popup-modal" class="ns-btn-outline px-5 py-2.5 rounded-lg text-sm font-medium">
+                  No, cancel
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="flex flex-col md:flex-row items-start gap-8 pt-10 md:pt-0">
+        <div class="flex-shrink-0 bg-white p-3 rounded-2xl shadow-lg">
+          <img src="data:image/png;base64,{{ qr_coded }}" alt="QR Code" class="w-40 h-40 object-cover rounded-md" data-testid="url-qr-code">
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <p class="text-sm text-gray-400 mb-2">Details for URL</p>
+          <h1 class="text-2xl md:text-3xl font-bold mb-4 break-all" data-testid="short-url-heading">
+            <a href="http://127.0.0.1:8000/{{ short_url.short_code }}" class="text-cyan-400 hover:text-cyan-300 transition-colors">
+              http://127.0.0.1:8000/{{ short_url.short_code }}
+            </a>
+          </h1>
+
+          <div class="space-y-3 text-sm">
+            <div>
+              <span class="text-gray-500 uppercase text-xs tracking-wider">Original URL</span>
+              <a href="{{ short_url.original_url }}" target="_blank" class="block mt-1 text-indigo-300 hover:text-indigo-200 transition-colors break-all" data-testid="original-url-link">
+                {{ short_url.original_url }}
+              </a>
+            </div>
+            <div class="flex flex-wrap gap-x-8 gap-y-3 pt-2">
+              <div>
+                <span class="text-gray-500 uppercase text-xs tracking-wider">Short Code</span>
+                <p class="mt-1 text-white font-mono" data-testid="short-code">{{ short_url.short_code }}</p>
+              </div>
+              <div>
+                <span class="text-gray-500 uppercase text-xs tracking-wider">Date Created</span>
+                <p class="mt-1 text-white" data-testid="date-created">{{ short_url.date_created }}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </form>
-</div>
-    <img src="data:image/png;base64,{{ qr_coded }}" alt="QR Code" class="w-40 h-40 object-cover rounded-md">
-    <div>
-        <h1 class="text-2xl font-bold mb-4">Details for URL: 
-            <a href="http://127.0.0.1:8000/{{ short_url.short_code }}" class="text-blue-600 hover:text-blue-800">http://127.0.0.1:8000/{{ short_url.short_code }}</a>
-        </h1>
-        <p class="mb-2">Original URL: 
-            <a href="{{ short_url.original_url }}" class="text-blue-600 hover:text-blue-800">{{ short_url.original_url }}</a>
-        </p>
-        <p class="mb-2">Short Code: {{ short_url.short_code }}</p>
-        <p class="mt-4 mb-4">Date Created: {{ short_url.date_created }}</p>
-    </div>
-</div>
 
-
-  <h2 class="text-xl font-semibold mb-4 mt-4">Click Details</h2>
-
-    <div class="overflow-y-auto max-h-80">
-      <table class="min-w-full bg-white border border-gray-200 divide-y divide-gray-200 rounded-lg shadow-sm mb-6">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
-            {% comment %} <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th> {% endcomment %}
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referer</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Browser</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          {% for click in clicks %}
-              <tr>
-                <td class="px-6 py-4 whitespace-nowrap">{{ click.timestamp }}</td>
-                {% comment %} <td class="px-6 py-4 whitespace-nowrap">{{ click.ip_address }}</td> {% endcomment %}
-                <td class="px-6 py-4 whitespace-nowrap">{{ click.referer }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ click.browser }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ click.device }}</td>
+    <!-- ============ Click Details Table ============ -->
+    <div class="glass-card p-6">
+      <h2 class="text-xl font-semibold text-white mb-4">Click Details</h2>
+      <div class="overflow-x-auto overflow-y-auto max-h-80 rounded-xl border border-white/5">
+        <table class="min-w-full divide-y divide-white/10" data-testid="click-details-table">
+          <thead class="bg-white/5 sticky top-0">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Timestamp</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Referer</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Browser</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Device</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5">
+            {% for click in clicks %}
+              <tr class="hover:bg-white/5 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{{ click.timestamp }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ click.referer|default:"—" }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{{ click.browser }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{{ click.device }}</td>
               </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+            {% empty %}
+              <tr>
+                <td colspan="4" class="px-6 py-10 text-center text-sm text-gray-500" data-testid="no-clicks-message">
+                  No clicks recorded yet. Share your link to start tracking.
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-  
 
-  <div class="bg-white p-4 rounded-lg  w-full h-64 mt-4">
-    <p>Bar Charts</p>
-    <canvas id="clicksPerDayChart" class="w-full h-64"></canvas>
+    <!-- ============ Bar Chart: Clicks Per Day ============ -->
+    <div class="glass-card p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-white">Clicks Per Day</h3>
+        <span class="text-xs text-gray-500 uppercase tracking-wider">Bar Chart</span>
+      </div>
+      <div class="relative h-72">
+        <canvas id="clicksPerDayChart"></canvas>
+      </div>
+    </div>
+
+    <!-- ============ Pie Charts: Referrer / Device / Browser ============ -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="glass-card p-6">
+        <h3 class="text-lg font-semibold text-white mb-4">Referrer</h3>
+        <div class="relative h-56 flex items-center justify-center">
+          <canvas id="referrerChart"></canvas>
+        </div>
+      </div>
+      <div class="glass-card p-6">
+        <h3 class="text-lg font-semibold text-white mb-4">Devices</h3>
+        <div class="relative h-56 flex items-center justify-center">
+          <canvas id="deviceChart"></canvas>
+        </div>
+      </div>
+      <div class="glass-card p-6">
+        <h3 class="text-lg font-semibold text-white mb-4">Browsers</h3>
+        <div class="relative h-56 flex items-center justify-center">
+          <canvas id="browserChart"></canvas>
+        </div>
+      </div>
+    </div>
+
   </div>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
-    
-    <div class="bg-white p-4 rounded-lg shadow-md">
-      <p>Referrer Chart</p>
-      <canvas id="referrerChart" class="w-48 h-48"></canvas>
-    </div>
-    <div class="bg-white p-4 rounded-lg shadow-md">
-      <p>Devices Chart</p>
-      <canvas id="deviceChart" class="w-48 h-48"></canvas>
-    </div>
-    <div class="bg-white p-4 rounded-lg shadow-md">
-      <p>Browser Chart</p>
-      <canvas id="browserChart" class="w-48 h-48"></canvas>
-    </div>
-  </div>
-  <br>
-<br>
-<br>
 </div>
-</div>
-</body>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
 
 <script>
-  // Data for Clicks Per Day Chart
+  // ===== Chart.js dark-theme defaults =====
+  Chart.defaults.color = '#cbd5e1';
+  Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
+  Chart.defaults.font.family = "'Inter', sans-serif";
+
+  const PALETTE = ['#06B6D4', '#6366F1', '#A855F7', '#F472B6', '#F59E0B', '#22C55E', '#38BDF8', '#F43F5E'];
+
+  // ===== Data =====
   var clicksPerDayData = {{ clicks_per_day|safe }};
   var clicksPerDayLabels = clicksPerDayData.map(item => item.day);
   var clicksPerDayCounts = clicksPerDayData.map(item => item.clicks);
 
-  // Data for Referrer Chart
   var referrerData = {{ referrer_distribution|safe }};
-  var referrerLabels = referrerData.map(item => item.referer);
+  var referrerLabels = referrerData.map(item => item.referer || 'Direct');
   var referrerCounts = referrerData.map(item => item.count);
 
-  // Data for Device Chart
   var deviceData = {{ device_distribution|safe }};
   var deviceLabels = deviceData.map(item => item.device);
   var deviceCounts = deviceData.map(item => item.count);
 
-  // Data for Browser Chart
   var browserData = {{ browser_distribution|safe }};
   var browserLabels = browserData.map(item => item.browser);
   var browserCounts = browserData.map(item => item.count);
-  console.log(browserCounts)
-  // Clicks Per Day Chart
+
+  // ===== Bar: Clicks Per Day =====
   new Chart(document.getElementById('clicksPerDayChart'), {
     type: 'bar',
     data: {
@@ -174,128 +218,107 @@
       datasets: [{
         label: 'Clicks Per Day',
         data: clicksPerDayCounts,
-        backgroundColor: 'rgba(247, 119, 185, 0.8)', 
-        fill: true,
-        barThickness: 24,
-        categoryPercentage: 0.8, 
-        barPercentage: 0.9 
-        
+        backgroundColor: 'rgba(6, 182, 212, 0.7)',
+        borderColor: '#06B6D4',
+        borderWidth: 1,
+        borderRadius: 6,
+        barThickness: 28,
       }]
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#e2e8f0' } }
+      },
       scales: {
-        x: { type: 'time', time: { unit: 'day' } },
-        y: { beginAtZero: true }
-      }
-    }
-  });
-
-  new Chart(document.getElementById('referrerChart'), {
-    type: 'pie',
-    data: {
-      labels: referrerLabels,
-      datasets: [{
-        label: 'Referrer',
-        data: referrerCounts,
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          display: false // Disable the default legend
+        x: {
+          type: 'time',
+          time: { unit: 'day' },
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { color: '#94a3b8' }
         },
-        tooltip: {
-          callbacks: {
-            label: function(tooltipItem) {
-              return referrerLabels[tooltipItem.dataIndex] + ': ' + referrerCounts[tooltipItem.dataIndex];
-            }
-          }
-        }
-      }
-    }
-  }); // Referrer Chart
- 
-
-  // Device Chart
-  new Chart(document.getElementById('deviceChart'), {
-    type: 'pie',
-    data: {
-      labels: deviceLabels,
-      datasets: [{
-        label: 'Device',
-        data: deviceCounts,
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          display: false // Disable the default legend
-        },
-        tooltip: {
-          callbacks: {
-            label: function(tooltipItem) {
-              return referrerLabels[tooltipItem.dataIndex] + ': ' + referrerCounts[tooltipItem.dataIndex];
-            }
-          }
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { color: '#94a3b8', precision: 0 }
         }
       }
     }
   });
 
-  // Browser Chart
-  new Chart(document.getElementById('browserChart'), {
-    type: 'pie',
-    data: {
-      labels: browserLabels,
-      datasets: [{
-        label: 'Browser',
-        data: browserCounts,
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          display: false // Disable the default legend
-        },
-        tooltip: {
-          callbacks: {
-            label: function(tooltipItem) {
-              return referrerLabels[tooltipItem.dataIndex] + ': ' + referrerCounts[tooltipItem.dataIndex];
+  // ===== Helper: build pie chart with dark legend =====
+  function makePie(canvasId, labels, counts, labelName) {
+    return new Chart(document.getElementById(canvasId), {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: labelName,
+          data: counts,
+          backgroundColor: PALETTE.slice(0, Math.max(labels.length, 1)),
+          borderColor: 'rgba(2, 6, 23, 0.8)',
+          borderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '55%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: '#cbd5e1', padding: 12, boxWidth: 12, boxHeight: 12, font: { size: 11 } }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(tooltipItem) {
+                return labels[tooltipItem.dataIndex] + ': ' + counts[tooltipItem.dataIndex];
+              }
             }
           }
         }
       }
-    }
-  });
+    });
+  }
 
-//custom legend scroll
-  const legendContainer = document.getElementById('chartLegend');
-  const legendItems = chart.data.labels.map((label, index) => {
-    const color = chart.data.datasets[0].backgroundColor[index];
-    return `<li style="color: ${color};">${label}: ${chart.data.datasets[0].data[index]}</li>`;
-  }).join('');
-  legendContainer.innerHTML = `<ul>${legendItems}</ul>`;
+  makePie('referrerChart', referrerLabels, referrerCounts, 'Referrer');
+  makePie('deviceChart', deviceLabels, deviceCounts, 'Device');
+  makePie('browserChart', browserLabels, browserCounts, 'Browser');
 </script>
 
 <script>
-  // JavaScript for handling dropdown menu visibility
-document.querySelectorAll("[id^=dropdownMenuButton]").forEach(button => {
-      button.addEventListener("click", function() {
-          const menuId = this.id.replace("Button", "");
-          document.getElementById(menuId).classList.toggle("hidden");
-      });
+  // Share dropdown toggle
+  document.querySelectorAll("[id^=dropdownMenuButton]").forEach(button => {
+    button.addEventListener("click", function(e) {
+      e.stopPropagation();
+      const menuId = this.id.replace("Button", "");
+      document.getElementById(menuId).classList.toggle("hidden");
+    });
   });
-  
-  document.getElementById('menu-button').addEventListener('click', function() {
-      var dropdown = document.getElementById('menu-dropdown');
-      dropdown.classList.toggle('hidden');
+  document.addEventListener('click', function(e) {
+    document.querySelectorAll("[id^=dropdownMenu]").forEach(menu => {
+      if (menu.id.startsWith('dropdownMenuButton')) return;
+      if (!menu.classList.contains('hidden') && !menu.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    });
+  });
+
+  // Delete modal open/close (Flowbite-compatible data attributes kept; manual fallback)
+  document.querySelectorAll('[data-modal-toggle="popup-modal"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const modal = document.getElementById('popup-modal');
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+    });
+  });
+  document.querySelectorAll('[data-modal-hide="popup-modal"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const modal = document.getElementById('popup-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    });
   });
 </script>
 <script src="{% static 'scripts.js' %}" defer></script>

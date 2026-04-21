@@ -234,7 +234,16 @@
           
           var isSafe = data.prediction == 1;
           predictionResult.textContent = isSafe ? "✅ Deemed Safe" : "⚠️ Deemed Suspicious";
-          phishingProbability.textContent = (data.probability_phishing * 100).toFixed(2) + "%";
+            // Pick the confidence returned by backend; fall back to raw class probability if needed
+          var confidence = (typeof data.probability === "number")
+            ? data.probability
+            : (isSafe ? data.probability_legitimate : data.probability_phishing);
+
+          if (typeof confidence !== "number" || isNaN(confidence)) {
+            phishingProbability.textContent = "--";
+          } else {
+            phishingProbability.textContent = (confidence * 100).toFixed(2) + "%";
+          }
           
           if (isSafe) {
             resultCard.classList.add("border-green-500/30", "bg-green-500/5");

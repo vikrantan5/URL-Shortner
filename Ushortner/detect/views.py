@@ -7,6 +7,7 @@ from .feature import FeatureExtraction
 with open("detect/model.pkl", "rb") as f:
     model = pickle.load(f)
 
+
 @api_view(['POST'])
 def predict(request):
     url = request.data.get('url', '').strip()
@@ -19,29 +20,29 @@ def predict(request):
 
         x = np.array(features).reshape(1, -1)
 
-        prediction = int(model.predict(x)[0])
-
+        # Raw probabilities from the model (index 0 -> phishing, index 1 -> legitimate)
         probs = model.predict_proba(x)[0]
-
         phish_prob = float(probs[0])
         legit_prob = float(probs[1])
 
-# convert to percentage
+        # Convert to percentage for business rule
         phish_percent = phish_prob * 100
-        legit_percent = legit_prob * 100
 
-# 🔥 FINAL LOGIC
+        # Business rule: treat URL as suspicious only when phishing probability >= 70%
         if phish_percent >= 70:
             prediction = 0  # suspicious
-            final_probability = phish_percent
+            confidence = phish_prob
         else:
             prediction = 1  # legitimate
-            final_probability = 100.0   # force 100%
+            confidence = legit_prob
 
         return Response({
             "prediction": prediction,
-            "phishing_probability": float(probs[0]),
-            "legitimate_probability": float(probs[1])
+            # Confidence for the final verdict (0-1). Frontend multiplies by 100.
+            "probability": round(confidence, 4),
+            # Keep raw probabilities available too
+            "probability_phishing": round(phish_prob, 4),
+            "probability_legitimate": round(legit_prob, 4),
         })
 
     except Exception as e:
